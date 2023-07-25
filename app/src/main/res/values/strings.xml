@@ -1,3 +1,179 @@
 <resources>
     <string name="app_name">GYTR Compose</string>
+
+    <!-- Toolbar -->
+    <string name="nav_profile">Profile</string>
+    <string name="nav_myroutines">My routines</string>
+    <string name="nav_exercises">Exercises</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Exercise button menus -->
+    <string-array name="targetTypes">
+        <item>Body part</item>
+        <item>Muscle</item>
+    </string-array>
+    <string-array name="body_parts">
+        <item>Select body part</item>
+        <item>Back</item>
+        <item>Cardio</item>
+        <item>Chest</item>
+        <item>Lower arms</item>
+        <item>Lower legs</item>
+        <item>Neck</item>
+        <item>Shoulder</item>
+        <item>Upper arms</item>
+        <item>Upper legs</item>
+        <item>Waist</item>
+    </string-array>
+    <string-array name="muscles">
+        <item>Select muscle</item>
+        <item>Abductors</item>
+        <item>Abs</item>
+        <item>Biceps</item>
+        <item>Calves</item>
+        <item>Cardiovascular system</item>
+        <item>Delts</item>
+        <item>Glutes</item>
+        <item>Forearms</item>
+        <item>Hamstrings</item>
+        <item>Lats</item>
+        <item>Levator scapulae</item>
+        <item>Pectorals</item>
+        <item>Quads</item>
+        <item>Serratus anterior</item>
+        <item>Spine</item>
+        <item>Traps</item>
+        <item>Triceps</item>
+        <item>Upper back</item>
+    </string-array>
+    <string name="no_exercise_available">Search exercise</string>
+
+    <!-- Img content descriptiona -->
+    <string name="exerciseContentDescription">Exercise image</string>
+    <string name="deleteExerciseContentDescription">Delete exercise</string>
+    <string name="checkImageContentDescription">Check image</string>
+    <string name="checkButtonContentDescription">Check button</string>
+
+    <!-- Buttons text -->
+    <string name="newRoutineBtn">New routine</string>
+
+    <!-- Settings screen -->
+    <string name="measures_settings_header">Measures</string>
+    <string name="timer_settings_header">Rest timer</string>
+    <string name="sets_settings_header">Sets</string>
+
+    <string name="weight_settings">Weight</string>
+    <string name="timer_setting">Timer</string>
+    <string name="duration_settings">Duration</string>
+    <string name="rest_notification_settings">Rest notification</string>
+    <string name="sets_settings">Number of sets</string>
+
+    <string name="weight_settings_key">weight</string>
+    <string name="timer_setting_key">timer</string>
+    <string name="duration_settings_key">duration</string>
+    <string name="rest_notification_key">notification</string>
+    <string name="sets_settings_key">sets</string>
+
+    <string name="timer_settings_summary">Enable rest timer</string>
+    <string name="duration_settings_summary">Rest timer duration</string>
+    <string name="sets_settings_summary">Number of sets for each exercise.</string>
+    <string name="rest_notification_summary">Enable notification when rest time finish</string>
+
+    <string-array name="weight_settings_options">
+        <item>kg</item>
+        <item>lb</item>
+    </string-array>
+
+    <string-array name="duration_settings_options">
+        <item>30s</item>
+        <item>1min</item>
+        <item>1min 30s</item>
+        <item>2min</item>
+        <item>2min 30s</item>
+        <item>3min</item>
+        <item>3min 30s</item>
+        <item>4min</item>
+        <item>4min 30s</item>
+        <item>5min</item>
+    </string-array>
+
+    <string-array name="sets_settings_options">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+
+    <!-- New routine -->
+    <string name="et_routine_name_hint">Routine name</string>
+    <string name="save_routine">Save routine</string>
+    <string name="add_exercise">Add exercise</string>
+
+    <!-- No exercise selected -->
+    <string name="no_exercise_selected">No exercise selected</string>
+    <string name="exercise_selection">You must select an exercise to add</string>
+    <string name="accept">OK</string>
+
+    <!-- Routine -->
+    <string name="start_training">Start training</string>
+    <string name="delete_routine">Delete routine</string>
+    <string name="edit_routine">Edit routine</string>
+
+    <!-- Training -->
+    <string name="duration">Duration</string>
+    <string name="sets">Sets</string>
+    <string name="last_rep">Last rep</string>
+    <string name="weight">Weight</string>
+    <string name="reps">Reps</string>
+    <string name="finish_training">Finish</string>
+    <string name="cero">0</string>
+    <string name="no_last_rep">-</string>
+
+    <!-- Profile -->
+    <string name="no_histories">No trainings registered yet</string>
+
+    <!-- Viewpager titles -->
+    <string name="my_exercises">My exercises</string>
+    <string name="search_exercises">Search exercises</string>
+
+    <!-- Exercises -->
+    <string name="no_exercises">No exercises added yet</string>
+
+    <!-- Save training dialog -->
+    <string name="save_training">Save training</string>
+    <string name="save_training_message">Do you want to save the training?</string>
+    <string name="save_training_ok">Save</string>
+    <string name="cancel_save_training">Cancel</string>
+
+    <!-- Empty name dialog -->
+    <string name="empty_name">Empty routine name</string>
+    <string name="empty_name_text">You can´t save a routine with empty name</string>
+
+    <!-- Routine exists dialog -->
+    <string name="routine_exists_title">Routine already exists</string>
+    <string name="routine_exists_text">There already exists a routine with that name. You must save the routine with a different name</string>
+
+    <!-- Delete exercise dialog -->
+    <string name="delete_exercise">Delete exercise</string>
+    <string name="delete_exercise_message">Do you want to delete this exercise from this routine?</string>
+    <string name="delete_ok">Delete</string>
+    <string name="delete_cancel">Cancel</string>
+
+    <!-- Max numbr routines fragment -->
+    <string name="max_number_routines">Maximum number of routines</string>
+    <string name="max_number_routines_message">Maximum number of routines reached. If you want to create a new routine download the paid version of this app or delete a routine.</string>
+
+    <!-- Delete routine dialog -->
+    <string name="delete_routine_dialog">Delete routine</string>
+    <string name="delete_routine_message">Do you want to delete routine?</string>
+
+    <!-- No internet connection dialog -->
+    <string name="no_internet_dialog">No internet connection</string>
+    <string name="no_internet_message">Internet connection is required for this task. Please check your internet connection.</string>
 </resources>
