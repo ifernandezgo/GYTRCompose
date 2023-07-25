@@ -3,6 +3,7 @@ package es.upsa.mimo.gytrcompose.bottomNavigation
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.painterResource
@@ -28,6 +29,9 @@ fun BottomNavigation(navController: NavController) {
                 },
                 selected = currentRoute === item.screen_route,
                 alwaysShowLabel = true,
+                label = {
+                        Text(text = item.title)
+                },
                 onClick = {
                     navController.navigate(item.screen_route) {
 
