@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
+import es.upsa.mimo.gytrcompose.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,7 +22,8 @@ fun MyRoutines() {
             TopAppBar(
                 title = { Text(text = "My routines") },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Accent
+                    containerColor = Accent,
+                    titleContentColor = White
                 )
                 /*actions = {
                     IconButton(onClick = { }) {
