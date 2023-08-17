@@ -35,7 +35,6 @@ import es.upsa.mimo.gytrcompose.viewModel.ExercisesViewModel
 
 private lateinit var exViewModel: ExercisesViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Exercises(viewModel: ExercisesViewModel) {
     exViewModel = viewModel;
@@ -66,7 +65,7 @@ fun ExercisesView() {
         Box(modifier = Modifier.padding(it)) {
             Column() {
                 SearchBar()
-                Row {
+                Column {
                     Text(text = "ND")
                     Text(text = "ND")
                 }
