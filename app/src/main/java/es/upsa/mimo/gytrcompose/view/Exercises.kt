@@ -2,9 +2,10 @@ package es.upsa.mimo.gytrcompose.view
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -19,8 +20,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -32,13 +35,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
 import es.upsa.mimo.gytrcompose.ui.theme.White
 import es.upsa.mimo.gytrcompose.viewModel.ExercisesViewModel
+import kotlinx.coroutines.launch
 
 private lateinit var exViewModel: ExercisesViewModel
 
 @Composable
 fun Exercises(viewModel: ExercisesViewModel) {
     exViewModel = viewModel;
-    //val exercises by exViewModel.getExercises().observeAsState()
     ExercisesView()
 }
 
@@ -46,6 +49,7 @@ fun Exercises(viewModel: ExercisesViewModel) {
 @Preview
 @Composable
 fun ExercisesView() {
+    val exercises by exViewModel.getExercises().observeAsState(emptyList())
     Scaffold(
         topBar = {
             TopAppBar(
@@ -65,9 +69,12 @@ fun ExercisesView() {
         Box(modifier = Modifier.padding(it)) {
             Column() {
                 SearchBar()
-                Column {
-                    Text(text = "ND")
-                    Text(text = "ND")
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    items(exercises) { exercise ->
+                        Exercise(exercise = exercise)
+                    }
                 }
             }
         }
@@ -78,6 +85,7 @@ fun ExercisesView() {
 @Composable
 fun SearchBar() {
     var text by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
@@ -94,7 +102,9 @@ fun SearchBar() {
         //shape = RoundedCornerShape(4.dp),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = {
-            onSearch(text)
+            coroutineScope.launch {
+                onSearch(text)
+            }
             // Hide the keyboard after submitting the search
             keyboardController?.hide()
             //or hide keyboard
@@ -103,6 +113,6 @@ fun SearchBar() {
     )
 }
 
-fun onSearch(text: String) {
-
+suspend fun onSearch(text: String) {
+    exViewModel.getExerciseByName(text)
 }
