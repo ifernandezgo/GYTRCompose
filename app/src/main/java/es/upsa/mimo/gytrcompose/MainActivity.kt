@@ -26,15 +26,17 @@ import es.upsa.mimo.gytrcompose.view.MyRoutines
 import es.upsa.mimo.gytrcompose.view.Profile
 import es.upsa.mimo.gytrcompose.view.Settings
 import es.upsa.mimo.gytrcompose.viewModel.ExercisesViewModel
+import es.upsa.mimo.gytrcompose.viewModel.MyRoutinesViewModel
 
 class MainActivity : ComponentActivity() {
 
     private val exercisesViewModel by viewModels<ExercisesViewModel>()
+    private val myRoutineViewModel by viewModels<MyRoutinesViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainView(exercisesViewModel)
+            MainView(exercisesViewModel, myRoutineViewModel)
         }
     }
 }
@@ -42,7 +44,7 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainView(exercisesViewModel: ExercisesViewModel) {
+fun MainView(exercisesViewModel: ExercisesViewModel, myRoutinesViewModel: MyRoutinesViewModel) {
     val navController = rememberNavController()
     Screen {
         Scaffold(
@@ -58,7 +60,7 @@ fun MainView(exercisesViewModel: ExercisesViewModel) {
                     Profile()
                 }
                 composable(route = BottomNavItem.MyRoutines.screen_route) {
-                    MyRoutines()
+                    MyRoutines(myRoutinesViewModel)
                 }
                 composable(route = BottomNavItem.Exercises.screen_route) {
                     Exercises(exercisesViewModel)

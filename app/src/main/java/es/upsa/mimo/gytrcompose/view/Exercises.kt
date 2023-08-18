@@ -41,7 +41,6 @@ import es.upsa.mimo.gytrcompose.R
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
 import es.upsa.mimo.gytrcompose.ui.theme.White
 import es.upsa.mimo.gytrcompose.viewModel.ExercisesViewModel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 private lateinit var exViewModel: ExercisesViewModel
