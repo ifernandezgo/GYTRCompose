@@ -59,7 +59,7 @@ fun MyRoutinesView() {
                     .fillMaxWidth()
                     .padding(12.dp),
                 onClick = {
-
+                    //NewRoutine()
                 }
             ) {
                 Text(text = "New routine")
