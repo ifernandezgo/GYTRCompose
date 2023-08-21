@@ -25,17 +25,19 @@ import es.upsa.mimo.gytrcompose.ui.theme.White
 import es.upsa.mimo.gytrcompose.viewModel.MyRoutinesViewModel
 
 private lateinit var myRoutinesViewModel: MyRoutinesViewModel
+private lateinit var newRoutineClicked: () -> Unit
 
 @Composable
 fun MyRoutines(viewModel: MyRoutinesViewModel, onNewRoutine: () -> Unit) {
     myRoutinesViewModel = viewModel
-    MyRoutinesView(onNewRoutine)
+    newRoutineClicked = onNewRoutine
+    MyRoutinesView()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 //@Preview
-fun MyRoutinesView(onNewRoutine: () -> Unit) {
+fun MyRoutinesView() {
     val routines by myRoutinesViewModel.getRoutines().observeAsState(emptyList())
     Scaffold(
         topBar = {
@@ -45,11 +47,6 @@ fun MyRoutinesView(onNewRoutine: () -> Unit) {
                     containerColor = Accent,
                     titleContentColor = White
                 )
-                /*actions = {
-                    IconButton(onClick = { }) {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = null)
-                    }
-                }*/
             )
         },
     ) {
@@ -59,8 +56,7 @@ fun MyRoutinesView(onNewRoutine: () -> Unit) {
                     .fillMaxWidth()
                     .padding(12.dp),
                 onClick = {
-                    //NewRoutine()
-                    onNewRoutine()
+                    newRoutineClicked()
                 }
             ) {
                 Text(text = "New routine")

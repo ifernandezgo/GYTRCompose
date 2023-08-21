@@ -28,16 +28,18 @@ import es.upsa.mimo.gytrcompose.view.Profile
 import es.upsa.mimo.gytrcompose.view.Settings
 import es.upsa.mimo.gytrcompose.viewModel.ExercisesViewModel
 import es.upsa.mimo.gytrcompose.viewModel.MyRoutinesViewModel
+import es.upsa.mimo.gytrcompose.viewModel.NewRoutineViewModel
 
 class MainActivity : ComponentActivity() {
 
     private val exercisesViewModel by viewModels<ExercisesViewModel>()
     private val myRoutineViewModel by viewModels<MyRoutinesViewModel>()
+    private val newRoutineViewModel by viewModels<NewRoutineViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainView(exercisesViewModel, myRoutineViewModel)
+            MainView(exercisesViewModel, myRoutineViewModel, newRoutineViewModel)
         }
     }
 }
@@ -45,7 +47,11 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainView(exercisesViewModel: ExercisesViewModel, myRoutinesViewModel: MyRoutinesViewModel) {
+fun MainView(
+    exercisesViewModel: ExercisesViewModel,
+    myRoutinesViewModel: MyRoutinesViewModel,
+    newRoutineViewModel: NewRoutineViewModel
+) {
     val navController = rememberNavController()
     Screen {
         Scaffold(
@@ -61,9 +67,10 @@ fun MainView(exercisesViewModel: ExercisesViewModel, myRoutinesViewModel: MyRout
                     Profile()
                 }
                 composable(route = BottomNavItem.MyRoutines.screen_route) {
-                    MyRoutines(myRoutinesViewModel, onNewRoutine = {
-                        navController.navigate("newRoutine")
-                    })
+                    MyRoutines(
+                        myRoutinesViewModel,
+                        onNewRoutine = { navController.navigate("newRoutine") }
+                    )
                 }
                 composable(route = BottomNavItem.Exercises.screen_route) {
                     Exercises(exercisesViewModel)
@@ -72,7 +79,10 @@ fun MainView(exercisesViewModel: ExercisesViewModel, myRoutinesViewModel: MyRout
                     Settings()
                 }
                 composable(route = "newRoutine") {
-                    NewRoutine()
+                    NewRoutine(
+                        newRoutineViewModel,
+                        onBackClicked = { navController.popBackStack() }
+                    )
                 }
             }
         }

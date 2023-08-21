@@ -139,10 +139,10 @@ fun DropDownMenus() {
                                 val changed = type == targetTypes[0]
                                 if (bodyPartsSelected != changed) {
                                     bodyPartsSelected = changed
-                                    if (bodyPartsSelected) {
-                                        selectedMuscleText = bodyParts[0]
+                                    selectedMuscleText = if (bodyPartsSelected) {
+                                        bodyParts[0]
                                     } else {
-                                        selectedMuscleText = muscles[0]
+                                        muscles[0]
                                     }
                                 }
                             }
