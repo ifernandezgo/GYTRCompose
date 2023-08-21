@@ -23,6 +23,7 @@ import es.upsa.mimo.gytrcompose.bottomNavigation.BottomNavigation
 import es.upsa.mimo.gytrcompose.ui.theme.GYTRComposeTheme
 import es.upsa.mimo.gytrcompose.view.Exercises
 import es.upsa.mimo.gytrcompose.view.MyRoutines
+import es.upsa.mimo.gytrcompose.view.NewRoutine
 import es.upsa.mimo.gytrcompose.view.Profile
 import es.upsa.mimo.gytrcompose.view.Settings
 import es.upsa.mimo.gytrcompose.viewModel.ExercisesViewModel
@@ -60,13 +61,18 @@ fun MainView(exercisesViewModel: ExercisesViewModel, myRoutinesViewModel: MyRout
                     Profile()
                 }
                 composable(route = BottomNavItem.MyRoutines.screen_route) {
-                    MyRoutines(myRoutinesViewModel)
+                    MyRoutines(myRoutinesViewModel, onNewRoutine = {
+                        navController.navigate("newRoutine")
+                    })
                 }
                 composable(route = BottomNavItem.Exercises.screen_route) {
                     Exercises(exercisesViewModel)
                 }
                 composable(route = BottomNavItem.Settings.screen_route) {
                     Settings()
+                }
+                composable(route = "newRoutine") {
+                    NewRoutine()
                 }
             }
         }

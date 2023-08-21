@@ -27,15 +27,15 @@ import es.upsa.mimo.gytrcompose.viewModel.MyRoutinesViewModel
 private lateinit var myRoutinesViewModel: MyRoutinesViewModel
 
 @Composable
-fun MyRoutines(viewModel: MyRoutinesViewModel) {
+fun MyRoutines(viewModel: MyRoutinesViewModel, onNewRoutine: () -> Unit) {
     myRoutinesViewModel = viewModel
-    MyRoutinesView()
+    MyRoutinesView(onNewRoutine)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
-fun MyRoutinesView() {
+//@Preview
+fun MyRoutinesView(onNewRoutine: () -> Unit) {
     val routines by myRoutinesViewModel.getRoutines().observeAsState(emptyList())
     Scaffold(
         topBar = {
@@ -60,6 +60,7 @@ fun MyRoutinesView() {
                     .padding(12.dp),
                 onClick = {
                     //NewRoutine()
+                    onNewRoutine()
                 }
             ) {
                 Text(text = "New routine")
