@@ -1,21 +1,30 @@
 package es.upsa.mimo.gytrcompose.view
 
+import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -25,6 +34,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -35,47 +45,77 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import es.upsa.mimo.gytrcompose.R
+import es.upsa.mimo.gytrcompose.model.Exercise
+import es.upsa.mimo.gytrcompose.network.ExerciseDecoder
+import es.upsa.mimo.gytrcompose.previewParameters.ExercisePreviewParameterProvider
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
 import es.upsa.mimo.gytrcompose.ui.theme.White
-import es.upsa.mimo.gytrcompose.viewModel.ExercisesViewModel
+import es.upsa.mimo.gytrcompose.viewModel.AddExerciseViewModel
 import kotlinx.coroutines.launch
 
-private lateinit var exViewModel: ExercisesViewModel
+private lateinit var addExerciseViewModel: AddExerciseViewModel
+private lateinit var onBack: () -> Unit
+private lateinit var onExercise: () -> Unit
+private var selectedExercise: ExerciseDecoder? = null
+private lateinit var exerciseList: ArrayList<Exercise>
 
 @Composable
-fun Exercises(viewModel: ExercisesViewModel) {
-    exViewModel = viewModel
-    ExercisesView()
+fun AddExercise(
+    viewModel: AddExerciseViewModel,
+    onBackClicked: () -> Unit,
+    onExerciseSelected: () -> Unit,
+    exList: ArrayList<Exercise> = ArrayList()
+) {
+    addExerciseViewModel = viewModel
+    onBack = onBackClicked
+    onExercise = onExerciseSelected
+    exerciseList = exList
+    AddExerciseView()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun ExercisesView() {
-    val exercises by exViewModel.getExercises().observeAsState(emptyList())
+@Preview
+fun AddExerciseView() {
+    val exercises by addExerciseViewModel.getExercises().observeAsState(emptyList())
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Exercises") },
+                title = { Text(text = "New routine") },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = Accent,
                     titleContentColor = White
-                )
+                ),
+                actions = {
+                    IconButton(onClick = {
+                        onBack()
+                    }) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+                    }
+                }
             )
         },
     ) {
         Box(modifier = Modifier.padding(it)) {
             Column {
-                SearchBar()
-                DropDownMenus()
+                SearchBarAddEx()
+                DropDownMenusAddEx()
                 LazyColumn(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .selectableGroup()
                 ) {
                     items(exercises) { exercise ->
-                        Exercise(exercise = exercise)
+                        ExerciseRow(exercise = exercise)
                     }
                 }
             }
@@ -85,7 +125,7 @@ fun ExercisesView() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownMenus() {
+fun DropDownMenusAddEx() {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -181,7 +221,7 @@ fun DropDownMenus() {
                                     musclesExpanded = false
                                     if (bodyPart != bodyParts[0]) {
                                         coroutineScope.launch {
-                                            searchByBodyPart(bodyPart)
+                                            searchByBodyPartAddEx(bodyPart)
                                         }
                                     }
                                 }
@@ -197,7 +237,7 @@ fun DropDownMenus() {
                                     musclesExpanded = false
                                     if (muscle != muscles[0]) {
                                         coroutineScope.launch {
-                                            searchByMuscle(muscle)
+                                            searchByMuscleAddEx(muscle)
                                         }
                                     }
                                 }
@@ -212,7 +252,7 @@ fun DropDownMenus() {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun SearchBar() {
+fun SearchBarAddEx() {
     var text by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -232,7 +272,7 @@ fun SearchBar() {
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = {
             coroutineScope.launch {
-                onSearch(text)
+                onSearchAddEx(text)
             }
             // Hide the keyboard after submitting the search
             keyboardController?.hide()
@@ -242,14 +282,58 @@ fun SearchBar() {
     )
 }
 
-suspend fun onSearch(text: String) {
-    exViewModel.getExerciseByName(text)
+@OptIn(ExperimentalGlideComposeApi::class)
+@Preview
+@Composable
+fun ExerciseRow(
+    @PreviewParameter(ExercisePreviewParameterProvider::class) exercise: ExerciseDecoder
+) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(5.dp)
+        .selectable(
+            selected = exercise.id === (selectedExercise?.id ?: false),
+            onClick = {
+                selectedExercise = if(exercise.id != (selectedExercise?.id ?: true)) {
+                    exercise
+                } else {
+                    null
+                }
+                Log.d("Ex selected", selectedExercise.toString())
+            }
+        )
+    ) {
+        GlideImage(
+            model = exercise.gifUrl,
+            contentDescription = exercise.name,
+            modifier = Modifier
+                .height(70.dp)
+                .width(70.dp)
+                .padding(16.dp)
+        )
+        Column(modifier = Modifier.fillMaxHeight()) {
+            Text(
+                text = exercise.name,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
+            Text(
+                text = exercise.target,
+                fontSize = 12.sp
+            )
+        }
+
+    }
 }
 
-suspend fun searchByBodyPart(bodyPart: String) {
-    exViewModel.getExerciseByBodyPart(bodyPart = bodyPart)
+suspend fun onSearchAddEx(text: String) {
+    addExerciseViewModel.getExerciseByName(text)
 }
 
-suspend fun searchByMuscle(muscle: String) {
-    exViewModel.getExerciseByMuscle(muscle = muscle)
+suspend fun searchByBodyPartAddEx(bodyPart: String) {
+    addExerciseViewModel.getExerciseByBodyPart(bodyPart = bodyPart)
+}
+
+suspend fun searchByMuscleAddEx(muscle: String) {
+    addExerciseViewModel.getExerciseByMuscle(muscle = muscle)
 }

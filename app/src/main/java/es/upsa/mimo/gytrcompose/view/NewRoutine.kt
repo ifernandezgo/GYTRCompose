@@ -1,6 +1,5 @@
 package es.upsa.mimo.gytrcompose.view
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,25 +30,32 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import es.upsa.mimo.gytrcompose.model.Exercise
-import es.upsa.mimo.gytrcompose.network.ExerciseDecoder
-import es.upsa.mimo.gytrcompose.previewParameters.ExercisePreviewParameterProvider
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
 import es.upsa.mimo.gytrcompose.ui.theme.White
 import es.upsa.mimo.gytrcompose.viewModel.NewRoutineViewModel
 
 private lateinit var newRoutineViewModel: NewRoutineViewModel
 private lateinit var onBack: () -> Unit
+private lateinit var onAddExercise: () -> Unit
+var exercises: ArrayList<Exercise> = ArrayList()
 
 @Composable
-fun NewRoutine(viewModel: NewRoutineViewModel, onBackClicked: () -> Unit) {
+fun NewRoutine(
+    viewModel: NewRoutineViewModel,
+    onBackClicked: () -> Unit,
+    onAddExerciseClicked: () -> Unit,
+    newExercises: ArrayList<Exercise>? = null
+) {
     newRoutineViewModel = viewModel
     onBack = onBackClicked
+    onAddExercise = onAddExerciseClicked
+    if(newExercises != null)
+        exercises = newExercises
     NewRoutineView()
 }
 
@@ -57,7 +63,6 @@ fun NewRoutine(viewModel: NewRoutineViewModel, onBackClicked: () -> Unit) {
 @Preview
 @Composable
 fun NewRoutineView() {
-    val exercises: ArrayList<Exercise> = ArrayList()
     var routineName by remember { mutableStateOf("") }
     Scaffold(
         topBar = {
@@ -103,6 +108,7 @@ fun NewRoutineView() {
                         .padding(12.dp),
                     onClick = {
                         //onNewRoutine()
+                        onAddExercise()
                     }
                 ) {
                     Text(text = "Add exercise")

@@ -10,22 +10,21 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import es.upsa.mimo.gytrcompose.bottomNavigation.BottomNavItem
 import es.upsa.mimo.gytrcompose.bottomNavigation.BottomNavigation
 import es.upsa.mimo.gytrcompose.ui.theme.GYTRComposeTheme
+import es.upsa.mimo.gytrcompose.view.AddExercise
 import es.upsa.mimo.gytrcompose.view.Exercises
 import es.upsa.mimo.gytrcompose.view.MyRoutines
 import es.upsa.mimo.gytrcompose.view.NewRoutine
 import es.upsa.mimo.gytrcompose.view.Profile
 import es.upsa.mimo.gytrcompose.view.Settings
+import es.upsa.mimo.gytrcompose.viewModel.AddExerciseViewModel
 import es.upsa.mimo.gytrcompose.viewModel.ExercisesViewModel
 import es.upsa.mimo.gytrcompose.viewModel.MyRoutinesViewModel
 import es.upsa.mimo.gytrcompose.viewModel.NewRoutineViewModel
@@ -35,11 +34,12 @@ class MainActivity : ComponentActivity() {
     private val exercisesViewModel by viewModels<ExercisesViewModel>()
     private val myRoutineViewModel by viewModels<MyRoutinesViewModel>()
     private val newRoutineViewModel by viewModels<NewRoutineViewModel>()
+    private val addExerciseViewModel by viewModels<AddExerciseViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainView(exercisesViewModel, myRoutineViewModel, newRoutineViewModel)
+            MainView(exercisesViewModel, myRoutineViewModel, newRoutineViewModel, addExerciseViewModel)
         }
     }
 }
@@ -50,7 +50,8 @@ class MainActivity : ComponentActivity() {
 fun MainView(
     exercisesViewModel: ExercisesViewModel,
     myRoutinesViewModel: MyRoutinesViewModel,
-    newRoutineViewModel: NewRoutineViewModel
+    newRoutineViewModel: NewRoutineViewModel,
+    addExerciseViewModel: AddExerciseViewModel
 ) {
     val navController = rememberNavController()
     Screen {
@@ -81,6 +82,14 @@ fun MainView(
                 composable(route = "newRoutine") {
                     NewRoutine(
                         newRoutineViewModel,
+                        onBackClicked = { navController.popBackStack() },
+                        onAddExerciseClicked = { navController.navigate("addExercise") }
+                    )
+                }
+                composable(route = "addExercise") {
+                    AddExercise(
+                        viewModel = addExerciseViewModel,
+                        onExerciseSelected = {  },
                         onBackClicked = { navController.popBackStack() }
                     )
                 }

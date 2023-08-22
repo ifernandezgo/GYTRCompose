@@ -25,8 +25,13 @@ import es.upsa.mimo.gytrcompose.previewParameters.ExercisePreviewParameterProvid
 @OptIn(ExperimentalGlideComposeApi::class)
 @Preview
 @Composable
-fun Exercise(@PreviewParameter(ExercisePreviewParameterProvider::class) exercise: ExerciseDecoder) {
-    Row(modifier = Modifier.fillMaxWidth().padding(5.dp)) {
+fun Exercise(
+    @PreviewParameter(ExercisePreviewParameterProvider::class) exercise: ExerciseDecoder
+) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(5.dp)
+    ) {
         GlideImage(
             model = exercise.gifUrl,
             contentDescription = exercise.name,
