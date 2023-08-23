@@ -31,4 +31,13 @@ class APIRepository(private val service: APIService) {
             listOf()
         }
     }
+
+    suspend fun getExercisesById(id: String): ExerciseDecoder? {
+        val response = service.getExerciseById(id)
+        return if(response.isSuccessful) {
+            response.body()!!
+        } else {
+            null
+        }
+    }
 }

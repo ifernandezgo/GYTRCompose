@@ -22,6 +22,10 @@ class AddExerciseViewModel(application: Application): AndroidViewModel(applicati
     private val exercises = MutableLiveData<List<ExerciseDecoder>>()
     fun getExercises(): LiveData<List<ExerciseDecoder>> = exercises
 
+    private val exercise = MutableLiveData<ExerciseDecoder>()
+
+    fun getExercise(): LiveData<ExerciseDecoder> = exercise
+
     private val ApiRepository: APIRepository by lazy {
         val retrofit = Retrofit.Builder()
             .baseUrl(Constants.baseUrl)
@@ -46,6 +50,14 @@ class AddExerciseViewModel(application: Application): AndroidViewModel(applicati
     suspend fun getExerciseByMuscle(muscle: String) {
         viewModelScope.launch {
             exercises.value = ApiRepository.getExercisesByMuscle(muscle)
+        }
+    }
+
+    suspend fun getExerciseByIdApi(id: String) {
+        viewModelScope.launch {
+            val response = ApiRepository.getExercisesById(id)
+            if(response != null)
+                exercise.value = response
         }
     }
 
