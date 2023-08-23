@@ -1,5 +1,6 @@
 package es.upsa.mimo.gytrcompose.view
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -35,27 +37,40 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import es.upsa.mimo.gytrcompose.model.Exercise
+import es.upsa.mimo.gytrcompose.network.ExerciseDecoder
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
 import es.upsa.mimo.gytrcompose.ui.theme.White
 import es.upsa.mimo.gytrcompose.viewModel.NewRoutineViewModel
+import kotlinx.coroutines.launch
 
 private lateinit var newRoutineViewModel: NewRoutineViewModel
 private lateinit var onBack: () -> Unit
-private lateinit var onAddExercise: () -> Unit
-var exercises: ArrayList<Exercise> = ArrayList()
+private lateinit var onAddExercise: (List<String>) -> Unit
+private var exercises: ArrayList<Exercise> = ArrayList()
+private var exercisesId: List<String> = listOf()
 
 @Composable
 fun NewRoutine(
     viewModel: NewRoutineViewModel,
     onBackClicked: () -> Unit,
-    onAddExerciseClicked: () -> Unit,
-    newExercises: ArrayList<Exercise>? = null
+    onAddExerciseClicked: (List<String>) -> Unit,
+    newExercises: List<String>? = null
 ) {
+    val coroutineScope = rememberCoroutineScope()
     newRoutineViewModel = viewModel
     onBack = onBackClicked
     onAddExercise = onAddExerciseClicked
-    if(newExercises != null)
-        exercises = newExercises
+    if(newExercises != null) {
+        exercisesId = newExercises
+        exercisesId.forEach { id ->
+            coroutineScope.launch {
+                val ex = newRoutineViewModel.getExerciseById(id)
+                if(ex != null)
+                    exercises.add(ex)
+            }
+        }
+    }
+    Log.d("Ids New", exercisesId.toString())
     NewRoutineView()
 }
 
@@ -108,7 +123,7 @@ fun NewRoutineView() {
                         .padding(12.dp),
                     onClick = {
                         //onNewRoutine()
-                        onAddExercise()
+                        onAddExercise(exercisesId)
                     }
                 ) {
                     Text(text = "Add exercise")

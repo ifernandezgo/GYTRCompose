@@ -64,16 +64,16 @@ import kotlinx.coroutines.launch
 
 private lateinit var addExerciseViewModel: AddExerciseViewModel
 private lateinit var onBack: () -> Unit
-private lateinit var onExercise: () -> Unit
+private lateinit var onExercise: (String, List<String>) -> Unit
 private var selectedExercise: ExerciseDecoder? = null
-private lateinit var exerciseList: ArrayList<Exercise>
+private lateinit var exerciseList: List<String>
 
 @Composable
 fun AddExercise(
     viewModel: AddExerciseViewModel,
     onBackClicked: () -> Unit,
-    onExerciseSelected: () -> Unit,
-    exList: ArrayList<Exercise> = ArrayList()
+    onExerciseSelected: (String, List<String>) -> Unit,
+    exList: List<String>
 ) {
     addExerciseViewModel = viewModel
     onBack = onBackClicked
@@ -294,12 +294,12 @@ fun ExerciseRow(
         .selectable(
             selected = exercise.id === (selectedExercise?.id ?: false),
             onClick = {
-                selectedExercise = if(exercise.id != (selectedExercise?.id ?: true)) {
+                /*selectedExercise = if(exercise.id != (selectedExercise?.id ?: true)) {
                     exercise
                 } else {
                     null
-                }
-                Log.d("Ex selected", selectedExercise.toString())
+                }*/
+                onExercise(exercise.id, exerciseList)
             }
         )
     ) {

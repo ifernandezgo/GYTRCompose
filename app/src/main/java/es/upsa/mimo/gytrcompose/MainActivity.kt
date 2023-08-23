@@ -2,6 +2,7 @@ package es.upsa.mimo.gytrcompose
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -12,13 +13,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import es.upsa.mimo.gytrcompose.bottomNavigation.BottomNavItem
 import es.upsa.mimo.gytrcompose.bottomNavigation.BottomNavigation
 import es.upsa.mimo.gytrcompose.ui.theme.GYTRComposeTheme
 import es.upsa.mimo.gytrcompose.view.AddExercise
+import es.upsa.mimo.gytrcompose.view.AddExerciseSelected
 import es.upsa.mimo.gytrcompose.view.Exercises
 import es.upsa.mimo.gytrcompose.view.MyRoutines
 import es.upsa.mimo.gytrcompose.view.NewRoutine
@@ -79,18 +83,57 @@ fun MainView(
                 composable(route = BottomNavItem.Settings.screen_route) {
                     Settings()
                 }
-                composable(route = "newRoutine") {
+                composable(
+                    route = "newRoutine?exercisesList={exercisesList}",
+                    arguments = listOf(navArgument("exercisesList") { defaultValue = "" })
+                ) { navBackStackEntry ->
+                    val exercisesArray = navBackStackEntry.arguments?.getString("exercisesList")
+                    Log.d("New", exercisesArray.toString())
                     NewRoutine(
                         newRoutineViewModel,
                         onBackClicked = { navController.popBackStack() },
-                        onAddExerciseClicked = { navController.navigate("addExercise") }
+                        onAddExerciseClicked = { ex ->
+                            val formattedArray = ex.toList().joinToString(",")
+                            Log.d("ListNew", formattedArray)
+                            navController.navigate("addExercise?exercisesArray=$formattedArray")
+                        },
+                        newExercises = exercisesArray?.split(",")
                     )
                 }
-                composable(route = "addExercise") {
+                composable(
+                    route = "addExercise?exercisesArray={exercisesArray}",
+                    arguments = listOf(navArgument("exercisesArray") { defaultValue = "" })
+                ) { navBackStackEntry ->
+                    val exercisesArray = navBackStackEntry.arguments?.getString("exercisesArray")
                     AddExercise(
                         viewModel = addExerciseViewModel,
-                        onExerciseSelected = {  },
-                        onBackClicked = { navController.popBackStack() }
+                        onExerciseSelected = { exSelected, exList ->
+                            val formattedArray = exList.toList().joinToString(",")
+                            navController.navigate("addExerciseSelected/$exSelected?exercisesArray=$formattedArray")
+                        },
+                        onBackClicked = { navController.popBackStack() },
+                        exList = exercisesArray?.split(",") ?: emptyList()
+                    )
+                }
+                composable(
+                    route = "addExerciseSelected/{exerciseSelected}?exercisesArray={exercisesArray}",
+                    arguments = listOf(
+                        navArgument("exerciseSelected") { type = NavType.StringType },
+                        navArgument("exercisesArray") { defaultValue="" }
+                    )
+                ) { navBackStackEntry ->
+                    val exerciseSelected = navBackStackEntry.arguments?.getString("exerciseSelected")
+                    val exercisesArray = navBackStackEntry.arguments?.getString("exercisesArray")
+                    Log.d("ADEDA", exercisesArray.toString())
+                    AddExerciseSelected(
+                        viewModel = addExerciseViewModel,
+                        exerciseSelected = exerciseSelected ?: "",
+                        exList = exercisesArray?.split(",") ?: emptyList(),
+                        onBackClicked = { navController.popBackStack() },
+                        onAddExercise = { list ->
+                            val formattedArray = list.joinToString(",")
+                            navController.navigate("newRoutine?exercisesList=$formattedArray")
+                        }
                     )
                 }
             }
