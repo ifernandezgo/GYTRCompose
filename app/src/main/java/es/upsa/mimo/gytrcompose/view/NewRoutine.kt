@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -116,8 +117,11 @@ private fun NewRoutineView(newExercise: String) {
             )
         },
     ) {
-        Box(modifier = Modifier.padding(it)) {
-            Column(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(it)
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
                 TextField(
                     value = name,
                     onValueChange = { text ->
@@ -137,16 +141,17 @@ private fun NewRoutineView(newExercise: String) {
                         ExerciseItem(exercise = exercise)
                     }
                 }
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
-                    onClick = {
-                        onAddExercise()
-                    }
-                ) {
-                    Text(text = "Add exercise")
+            }
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .padding(12.dp),
+                onClick = {
+                    onAddExercise()
                 }
+            ) {
+                Text(text = "Add exercise")
             }
         }
     }

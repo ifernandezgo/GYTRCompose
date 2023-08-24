@@ -6,12 +6,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -61,11 +63,14 @@ private fun MainView(
         Scaffold(
             bottomBar = {
                 BottomNavigation(navController = navController)
-            }
+            },
         ) {
             NavHost(
                 navController = navController,
-                startDestination = "profile"
+                startDestination = "profile",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 60.dp)
             ) {
                 composable(route = BottomNavItem.Profile.screen_route) {
                     Profile()
