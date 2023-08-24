@@ -54,7 +54,7 @@ fun Exercises(viewModel: ExercisesViewModel) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun ExercisesView() {
+private fun ExercisesView() {
     val exercises by exViewModel.getExercises().observeAsState(emptyList())
     Scaffold(
         topBar = {
@@ -85,7 +85,7 @@ fun ExercisesView() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownMenus() {
+private fun DropDownMenus() {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -212,7 +212,7 @@ fun DropDownMenus() {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun SearchBar() {
+private fun SearchBar() {
     var text by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -242,14 +242,14 @@ fun SearchBar() {
     )
 }
 
-suspend fun onSearch(text: String) {
+private suspend fun onSearch(text: String) {
     exViewModel.getExerciseByName(text)
 }
 
-suspend fun searchByBodyPart(bodyPart: String) {
+private suspend fun searchByBodyPart(bodyPart: String) {
     exViewModel.getExerciseByBodyPart(bodyPart = bodyPart)
 }
 
-suspend fun searchByMuscle(muscle: String) {
+private suspend fun searchByMuscle(muscle: String) {
     exViewModel.getExerciseByMuscle(muscle = muscle)
 }

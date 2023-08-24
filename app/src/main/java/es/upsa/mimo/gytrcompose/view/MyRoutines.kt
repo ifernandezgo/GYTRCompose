@@ -36,7 +36,7 @@ fun MyRoutines(viewModel: MyRoutinesViewModel, onNewRoutine: () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 //@Preview
-fun MyRoutinesView() {
+private fun MyRoutinesView() {
     val routines by myRoutinesViewModel.getRoutines().observeAsState(emptyList())
     Scaffold(
         topBar = {

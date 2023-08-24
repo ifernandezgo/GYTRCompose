@@ -13,10 +13,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
 import es.upsa.mimo.gytrcompose.ui.theme.White
 
+@Composable
+fun Settings() {
+    SettingsView()
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun Settings() {
+private fun SettingsView() {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(

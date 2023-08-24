@@ -62,7 +62,7 @@ fun NewRoutine(
 @OptIn(ExperimentalMaterial3Api::class)
 //@Preview
 @Composable
-fun NewRoutineView(newExercise: String) {
+private fun NewRoutineView(newExercise: String) {
     var routineName by remember { mutableStateOf("") }
     var exList by remember { mutableStateOf(listOf<Exercise>()) }
     if(newExercise != "" && !exercisesId.contains(newExercise)) {
@@ -136,7 +136,7 @@ fun NewRoutineView(newExercise: String) {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun ExerciseItem(exercise: Exercise) {
+private fun ExerciseItem(exercise: Exercise) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(5.dp)) {

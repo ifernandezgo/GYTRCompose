@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainView(
+private fun MainView(
     exercisesViewModel: ExercisesViewModel,
     myRoutinesViewModel: MyRoutinesViewModel,
     newRoutineViewModel: NewRoutineViewModel,
@@ -129,7 +129,7 @@ fun MainView(
 }
 
 @Composable
-fun Screen(content: @Composable () -> Unit) {
+private fun Screen(content: @Composable () -> Unit) {
     GYTRComposeTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),

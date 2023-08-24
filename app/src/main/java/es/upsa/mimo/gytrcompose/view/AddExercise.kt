@@ -80,7 +80,7 @@ fun AddExercise(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun AddExerciseView() {
+private fun AddExerciseView() {
     val exercises by addExerciseViewModel.getExercises().observeAsState(emptyList())
     Scaffold(
         topBar = {
@@ -122,7 +122,7 @@ fun AddExerciseView() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownMenusAddEx() {
+private fun DropDownMenusAddEx() {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -249,7 +249,7 @@ fun DropDownMenusAddEx() {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun SearchBarAddEx() {
+private fun SearchBarAddEx() {
     var text by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -282,7 +282,7 @@ fun SearchBarAddEx() {
 @OptIn(ExperimentalGlideComposeApi::class)
 @Preview
 @Composable
-fun ExerciseRow(
+private fun ExerciseRow(
     @PreviewParameter(ExercisePreviewParameterProvider::class) exercise: ExerciseDecoder
 ) {
     Row(modifier = Modifier
@@ -323,14 +323,14 @@ fun ExerciseRow(
     }
 }
 
-suspend fun onSearchAddEx(text: String) {
+private suspend fun onSearchAddEx(text: String) {
     addExerciseViewModel.getExerciseByName(text)
 }
 
-suspend fun searchByBodyPartAddEx(bodyPart: String) {
+private suspend fun searchByBodyPartAddEx(bodyPart: String) {
     addExerciseViewModel.getExerciseByBodyPart(bodyPart = bodyPart)
 }
 
-suspend fun searchByMuscleAddEx(muscle: String) {
+private suspend fun searchByMuscleAddEx(muscle: String) {
     addExerciseViewModel.getExerciseByMuscle(muscle = muscle)
 }

@@ -21,7 +21,7 @@ fun Profile() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun ProfileView() {
+private fun ProfileView() {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(

@@ -57,7 +57,7 @@ fun AddExerciseSelected(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
-fun AddExerciseSelectedView() {
+private fun AddExerciseSelectedView() {
     val exercise by addExerciseViewModel.getExercise().observeAsState()
     val coroutineScope = rememberCoroutineScope()
     if(exercise == null) {
