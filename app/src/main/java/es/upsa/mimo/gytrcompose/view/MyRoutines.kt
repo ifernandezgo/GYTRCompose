@@ -1,6 +1,8 @@
 package es.upsa.mimo.gytrcompose.view
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +19,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
@@ -50,28 +53,37 @@ private fun MyRoutinesView() {
         },
     ) {
         Box(modifier = Modifier.padding(it)) {
-            Button(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                onClick = {
-                    newRoutineClicked()
+                    .fillMaxSize()
+                    .align(Alignment.Center)
+            ) {
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    onClick = {
+                        newRoutineClicked()
+                    }
+                ) {
+                    Text(text = "New routine")
                 }
-            ) {
-                Text(text = "New routine")
-            }
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items(routines) { routine ->
-                    Text(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(12.dp)
-                            .align(Alignment.Center),
-                        text = routine.name,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                ) {
+                    items(routines) { routine ->
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            text = routine.name,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp
+                        )
+                    }
                 }
             }
         }

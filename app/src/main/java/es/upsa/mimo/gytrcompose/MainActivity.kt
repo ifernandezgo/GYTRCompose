@@ -93,6 +93,9 @@ private fun MainView(
                         onAddExerciseClicked = {
                             navController.navigate("addExercise")
                         },
+                        onSaveRoutine = {
+                            navController.navigate(BottomNavItem.MyRoutines.screen_route)
+                        },
                         newExercise = exerciseId ?: ""
                     )
                 }

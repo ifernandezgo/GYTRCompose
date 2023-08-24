@@ -28,6 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -36,25 +37,31 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import es.upsa.mimo.gytrcompose.model.Exercise
+import es.upsa.mimo.gytrcompose.model.Routine
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
 import es.upsa.mimo.gytrcompose.ui.theme.White
 import es.upsa.mimo.gytrcompose.viewModel.NewRoutineViewModel
+import kotlinx.coroutines.launch
 
 private lateinit var newRoutineViewModel: NewRoutineViewModel
 private lateinit var onBack: () -> Unit
 private lateinit var onAddExercise: () -> Unit
+private lateinit var onSave: () -> Unit
 private var exercises: ArrayList<Exercise> = ArrayList()
 private var exercisesId: MutableList<String> = mutableListOf()
+private var routineName: String = ""
 
 @Composable
 fun NewRoutine(
     viewModel: NewRoutineViewModel,
     onBackClicked: () -> Unit,
     onAddExerciseClicked: () -> Unit,
+    onSaveRoutine: () -> Unit,
     newExercise: String
 ) {
     newRoutineViewModel = viewModel
     onBack = onBackClicked
+    onSave = onSaveRoutine
     onAddExercise = onAddExerciseClicked
     NewRoutineView(newExercise)
 }
@@ -63,15 +70,18 @@ fun NewRoutine(
 //@Preview
 @Composable
 private fun NewRoutineView(newExercise: String) {
-    var routineName by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
+    if(name != routineName) name = routineName
+    val coroutineScope = rememberCoroutineScope()
     var exList by remember { mutableStateOf(listOf<Exercise>()) }
     if(newExercise != "" && !exercisesId.contains(newExercise)) {
         exercisesId.add(newExercise)
         LaunchedEffect(true) {
             val ex = newRoutineViewModel.getExerciseById(newExercise)
-            if(ex != null)
+            if(ex != null) {
                 exercises.add(ex)
                 exList = exercises
+            }
         }
     }
     Scaffold(
@@ -91,7 +101,14 @@ private fun NewRoutineView(newExercise: String) {
                 },
                 actions = {
                     IconButton(onClick = {
-
+                        coroutineScope.launch {
+                            val saved = saveRoutine(name)
+                            if(saved) {
+                                exList = listOf()
+                                exercises = ArrayList()
+                                onSave()
+                            }
+                        }
                     }) {
                         Icon(imageVector = Icons.Default.Done, contentDescription = null)
                     }
@@ -102,8 +119,9 @@ private fun NewRoutineView(newExercise: String) {
         Box(modifier = Modifier.padding(it)) {
             Column(modifier = Modifier.fillMaxSize()) {
                 TextField(
-                    value = routineName,
+                    value = name,
                     onValueChange = { text ->
+                        name = text
                         routineName = text
                     },
                     modifier = Modifier
@@ -160,5 +178,17 @@ private fun ExerciseItem(exercise: Exercise) {
             )
         }
 
+    }
+}
+
+private suspend fun saveRoutine(name: String): Boolean {
+    return if(name != "" && newRoutineViewModel.getRoutineByName(name) == null) {
+        val routine = Routine(name = name)
+        newRoutineViewModel.insertRoutine(routine, exercises)
+        true
+    } else {
+        false
+        //val dialog = RoutineExistsDialogFragment()
+        //dialog.show(requireActivity().supportFragmentManager, resources.getString(R.string.routine_exists_title))
     }
 }
