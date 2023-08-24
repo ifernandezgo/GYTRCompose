@@ -34,20 +34,17 @@ import kotlinx.coroutines.launch
 
 private lateinit var addExerciseViewModel: AddExerciseViewModel
 private lateinit var exerciseId: String
-private var exerciseList: List<String> = mutableListOf()
 private lateinit var onBack: () -> Unit
-private lateinit var onAdd: (List<String>) -> Unit
+private lateinit var onAdd: (String) -> Unit
 
 @Composable
 fun AddExerciseSelected(
     viewModel: AddExerciseViewModel,
     exerciseSelected: String,
-    exList: List<String>,
     onBackClicked: () -> Unit,
-    onAddExercise: (List<String>) -> Unit
+    onAddExercise: (String) -> Unit
 ) {
     addExerciseViewModel = viewModel
-    exerciseList = exList
     onBack = onBackClicked
     onAdd = onAddExercise
     exerciseId = exerciseSelected
@@ -112,14 +109,7 @@ fun AddExerciseSelectedView() {
                                 if(addExerciseViewModel.getExerciseById(exerciseDb.exerciseId) == null)
                                     addExerciseViewModel.insertExercise(exerciseDb)
                             }
-                            val ex = mutableListOf<String>()
-                            if(exerciseList.isEmpty()) {
-                                ex[0] = exerciseId
-                            } else {
-                                ex.add(exercise!!.id)
-                            }
-                            Log.d("IDAddes", ex.toString())
-                            onAdd(ex.toList())
+                            onAdd(exerciseId)
                         }
                     ) {
                         Text(text = "Add exercise")

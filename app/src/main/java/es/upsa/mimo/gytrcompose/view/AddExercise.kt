@@ -1,7 +1,5 @@
 package es.upsa.mimo.gytrcompose.view
 
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,7 +32,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -54,7 +51,6 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import es.upsa.mimo.gytrcompose.R
-import es.upsa.mimo.gytrcompose.model.Exercise
 import es.upsa.mimo.gytrcompose.network.ExerciseDecoder
 import es.upsa.mimo.gytrcompose.previewParameters.ExercisePreviewParameterProvider
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
@@ -64,21 +60,18 @@ import kotlinx.coroutines.launch
 
 private lateinit var addExerciseViewModel: AddExerciseViewModel
 private lateinit var onBack: () -> Unit
-private lateinit var onExercise: (String, List<String>) -> Unit
 private var selectedExercise: ExerciseDecoder? = null
-private lateinit var exerciseList: List<String>
+private lateinit var onExercise: (String) -> Unit
 
 @Composable
 fun AddExercise(
     viewModel: AddExerciseViewModel,
     onBackClicked: () -> Unit,
-    onExerciseSelected: (String, List<String>) -> Unit,
-    exList: List<String>
+    onExerciseSelected: (String) -> Unit
 ) {
     addExerciseViewModel = viewModel
     onBack = onBackClicked
     onExercise = onExerciseSelected
-    exerciseList = exList
     AddExerciseView()
 }
 
@@ -299,7 +292,7 @@ fun ExerciseRow(
                 } else {
                     null
                 }*/
-                onExercise(exercise.id, exerciseList)
+                onExercise(exercise.id)
             }
         )
     ) {

@@ -24,61 +24,58 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import es.upsa.mimo.gytrcompose.model.Exercise
-import es.upsa.mimo.gytrcompose.network.ExerciseDecoder
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
 import es.upsa.mimo.gytrcompose.ui.theme.White
 import es.upsa.mimo.gytrcompose.viewModel.NewRoutineViewModel
-import kotlinx.coroutines.launch
 
 private lateinit var newRoutineViewModel: NewRoutineViewModel
 private lateinit var onBack: () -> Unit
-private lateinit var onAddExercise: (List<String>) -> Unit
+private lateinit var onAddExercise: () -> Unit
 private var exercises: ArrayList<Exercise> = ArrayList()
-private var exercisesId: List<String> = listOf()
+private var exercisesId: MutableList<String> = mutableListOf()
 
 @Composable
 fun NewRoutine(
     viewModel: NewRoutineViewModel,
     onBackClicked: () -> Unit,
-    onAddExerciseClicked: (List<String>) -> Unit,
-    newExercises: List<String>? = null
+    onAddExerciseClicked: () -> Unit,
+    newExercise: String
 ) {
-    val coroutineScope = rememberCoroutineScope()
     newRoutineViewModel = viewModel
     onBack = onBackClicked
     onAddExercise = onAddExerciseClicked
-    if(newExercises != null) {
-        exercisesId = newExercises
-        exercisesId.forEach { id ->
-            coroutineScope.launch {
-                val ex = newRoutineViewModel.getExerciseById(id)
-                if(ex != null)
-                    exercises.add(ex)
-            }
-        }
-    }
     Log.d("Ids New", exercisesId.toString())
-    NewRoutineView()
+    NewRoutineView(newExercise)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+//@Preview
 @Composable
-fun NewRoutineView() {
+fun NewRoutineView(newExercise: String) {
     var routineName by remember { mutableStateOf("") }
+    var exList by remember { mutableStateOf(listOf<Exercise>()) }
+    if(newExercise != "" && !exercisesId.contains(newExercise)) {
+        exercisesId.add(newExercise)
+        LaunchedEffect(true) {
+            val ex = newRoutineViewModel.getExerciseById(newExercise)
+            if(ex != null)
+                exercises.add(ex)
+                exList = exercises
+        }
+    }
+    //exes = exercises
     Scaffold(
         topBar = {
             TopAppBar(
@@ -113,7 +110,7 @@ fun NewRoutineView() {
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(exercises) { exercise ->
+                    items(exList) { exercise ->
                         ExerciseItem(exercise = exercise)
                     }
                 }
@@ -122,8 +119,7 @@ fun NewRoutineView() {
                         .fillMaxWidth()
                         .padding(12.dp),
                     onClick = {
-                        //onNewRoutine()
-                        onAddExercise(exercisesId)
+                        onAddExercise()
                     }
                 ) {
                     Text(text = "Add exercise")
