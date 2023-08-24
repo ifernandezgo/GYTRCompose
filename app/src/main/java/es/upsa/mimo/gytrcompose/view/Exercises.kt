@@ -75,7 +75,7 @@ private fun ExercisesView() {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     items(exercises) { exercise ->
-                        Exercise(exercise = exercise)
+                        ExerciseFromApi(exercise = exercise)
                     }
                 }
             }

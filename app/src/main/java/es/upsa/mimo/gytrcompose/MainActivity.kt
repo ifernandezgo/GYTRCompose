@@ -28,11 +28,13 @@ import es.upsa.mimo.gytrcompose.view.Exercises
 import es.upsa.mimo.gytrcompose.view.MyRoutines
 import es.upsa.mimo.gytrcompose.view.NewRoutine
 import es.upsa.mimo.gytrcompose.view.Profile
+import es.upsa.mimo.gytrcompose.view.Routine
 import es.upsa.mimo.gytrcompose.view.Settings
 import es.upsa.mimo.gytrcompose.viewModel.AddExerciseViewModel
 import es.upsa.mimo.gytrcompose.viewModel.ExercisesViewModel
 import es.upsa.mimo.gytrcompose.viewModel.MyRoutinesViewModel
 import es.upsa.mimo.gytrcompose.viewModel.NewRoutineViewModel
+import es.upsa.mimo.gytrcompose.viewModel.RoutineViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -40,11 +42,18 @@ class MainActivity : ComponentActivity() {
     private val myRoutineViewModel by viewModels<MyRoutinesViewModel>()
     private val newRoutineViewModel by viewModels<NewRoutineViewModel>()
     private val addExerciseViewModel by viewModels<AddExerciseViewModel>()
+    private val routineViewModel by viewModels<RoutineViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainView(exercisesViewModel, myRoutineViewModel, newRoutineViewModel, addExerciseViewModel)
+            MainView(
+                exercisesViewModel,
+                myRoutineViewModel,
+                newRoutineViewModel,
+                addExerciseViewModel,
+                routineViewModel
+            )
         }
     }
 }
@@ -56,7 +65,8 @@ private fun MainView(
     exercisesViewModel: ExercisesViewModel,
     myRoutinesViewModel: MyRoutinesViewModel,
     newRoutineViewModel: NewRoutineViewModel,
-    addExerciseViewModel: AddExerciseViewModel
+    addExerciseViewModel: AddExerciseViewModel,
+    routineViewModel: RoutineViewModel
 ) {
     val navController = rememberNavController()
     Screen {
@@ -78,7 +88,8 @@ private fun MainView(
                 composable(route = BottomNavItem.MyRoutines.screen_route) {
                     MyRoutines(
                         myRoutinesViewModel,
-                        onNewRoutine = { navController.navigate("newRoutine") }
+                        onNewRoutineClicked = { navController.navigate("newRoutine") },
+                        onRoutineClicked = { id -> navController.navigate("routine/$id") }
                     )
                 }
                 composable(route = BottomNavItem.Exercises.screen_route) {
@@ -129,6 +140,17 @@ private fun MainView(
                         onAddExercise = { exercise ->
                             navController.navigate("newRoutine?exerciseId=$exercise")
                         }
+                    )
+                }
+                composable(
+                    route = "routine/{routineId}",
+                    arguments = listOf(navArgument("routineId") { type = NavType.IntType })
+                ) { navBackStackEntry ->
+                    val routineId = navBackStackEntry.arguments?.getInt("routineId")
+                    Routine(
+                        viewModel = routineViewModel,
+                        routineId = routineId?: -1,
+                        onBackClicked = { navController.popBackStack() }
                     )
                 }
             }

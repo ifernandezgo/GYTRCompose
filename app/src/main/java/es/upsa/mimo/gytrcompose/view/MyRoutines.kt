@@ -1,5 +1,6 @@
 package es.upsa.mimo.gytrcompose.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -27,12 +29,18 @@ import es.upsa.mimo.gytrcompose.ui.theme.White
 import es.upsa.mimo.gytrcompose.viewModel.MyRoutinesViewModel
 
 private lateinit var myRoutinesViewModel: MyRoutinesViewModel
-private lateinit var newRoutineClicked: () -> Unit
+private lateinit var onNewRoutine: () -> Unit
+private lateinit var onRoutine: (Int) -> Unit
 
 @Composable
-fun MyRoutines(viewModel: MyRoutinesViewModel, onNewRoutine: () -> Unit) {
+fun MyRoutines(
+    viewModel: MyRoutinesViewModel,
+    onNewRoutineClicked: () -> Unit,
+    onRoutineClicked: (Int) -> Unit
+) {
     myRoutinesViewModel = viewModel
-    newRoutineClicked = onNewRoutine
+    onNewRoutine = onNewRoutineClicked
+    onRoutine = onRoutineClicked
     MyRoutinesView()
 }
 
@@ -62,8 +70,11 @@ private fun MyRoutinesView() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Accent
+                    ),
                     onClick = {
-                        newRoutineClicked()
+                        onNewRoutine()
                     }
                 ) {
                     Text(text = "New routine")
@@ -76,6 +87,9 @@ private fun MyRoutinesView() {
                     items(routines) { routine ->
                         Text(
                             modifier = Modifier
+                                .clickable {
+                                    onRoutine(routine.routineId ?: -1)
+                                }
                                 .fillMaxWidth()
                                 .padding(12.dp),
                             text = routine.name,

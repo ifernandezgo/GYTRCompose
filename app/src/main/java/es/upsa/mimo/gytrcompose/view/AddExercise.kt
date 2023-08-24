@@ -265,15 +265,12 @@ private fun SearchBarAddEx() {
         colors = TextFieldDefaults.textFieldColors(
             containerColor = Color.Transparent
         ),
-        //shape = RoundedCornerShape(4.dp),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = {
             coroutineScope.launch {
                 onSearchAddEx(text)
             }
-            // Hide the keyboard after submitting the search
             keyboardController?.hide()
-            //or hide keyboard
             focusManager.clearFocus()
         })
     )
@@ -291,11 +288,6 @@ private fun ExerciseRow(
         .selectable(
             selected = exercise.id === (selectedExercise?.id ?: false),
             onClick = {
-                /*selectedExercise = if(exercise.id != (selectedExercise?.id ?: true)) {
-                    exercise
-                } else {
-                    null
-                }*/
                 onExercise(exercise.id)
             }
         )

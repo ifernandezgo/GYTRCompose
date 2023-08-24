@@ -2,19 +2,17 @@ package es.upsa.mimo.gytrcompose.view
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,12 +29,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
 import es.upsa.mimo.gytrcompose.model.Exercise
 import es.upsa.mimo.gytrcompose.model.Routine
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
@@ -67,14 +64,17 @@ fun NewRoutine(
     NewRoutineView(newExercise)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 //@Preview
 @Composable
 private fun NewRoutineView(newExercise: String) {
     var name by remember { mutableStateOf("") }
     if(name != routineName) name = routineName
     val coroutineScope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     var exList by remember { mutableStateOf(listOf<Exercise>()) }
+
     if(newExercise != "" && !exercisesId.contains(newExercise)) {
         exercisesId.add(newExercise)
         LaunchedEffect(true) {
@@ -85,6 +85,7 @@ private fun NewRoutineView(newExercise: String) {
             }
         }
     }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -132,13 +133,18 @@ private fun NewRoutineView(newExercise: String) {
                         .fillMaxWidth()
                         .padding(12.dp),
                     maxLines = 1,
+                    singleLine = true,
+                    keyboardActions = KeyboardActions(onDone =  {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                    }),
                     placeholder = { Text(text = "Routine name") }
                 )
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     items(exList) { exercise ->
-                        ExerciseItem(exercise = exercise)
+                        ExerciseFromDb(exercise = exercise)
                     }
                 }
             }
@@ -147,6 +153,9 @@ private fun NewRoutineView(newExercise: String) {
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter)
                     .padding(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Accent
+                ),
                 onClick = {
                     onAddExercise()
                 }
@@ -154,35 +163,6 @@ private fun NewRoutineView(newExercise: String) {
                 Text(text = "Add exercise")
             }
         }
-    }
-}
-
-@OptIn(ExperimentalGlideComposeApi::class)
-@Composable
-private fun ExerciseItem(exercise: Exercise) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(5.dp)) {
-        GlideImage(
-            model = exercise.gifUrl,
-            contentDescription = exercise.name,
-            modifier = Modifier
-                .height(70.dp)
-                .width(70.dp)
-                .padding(16.dp)
-        )
-        Column(modifier = Modifier.fillMaxHeight()) {
-            Text(
-                text = exercise.name,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
-            Text(
-                text = exercise.target,
-                fontSize = 12.sp
-            )
-        }
-
     }
 }
 

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -96,6 +97,9 @@ private fun AddExerciseSelectedView() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(12.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Accent
+                        ),
                         onClick = {
                             val exerciseDb = Exercise(
                                 exerciseId = exercise!!.id,

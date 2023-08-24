@@ -1,6 +1,8 @@
 package es.upsa.mimo.gytrcompose.view
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,8 +35,14 @@ private fun SettingsView() {
             )
         },
     ) {
-        Box(modifier = Modifier.padding(it)) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .padding(it)
+        ) {
+            Column {
+                Text(text = "Measures")
 
+            }
         }
     }
 }
