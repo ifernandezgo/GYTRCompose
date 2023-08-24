@@ -27,7 +27,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -57,6 +56,9 @@ import es.upsa.mimo.gytrcompose.ui.theme.Accent
 import es.upsa.mimo.gytrcompose.ui.theme.White
 import es.upsa.mimo.gytrcompose.viewModel.AddExerciseViewModel
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+
 
 private lateinit var addExerciseViewModel: AddExerciseViewModel
 private lateinit var onBack: () -> Unit
@@ -82,13 +84,15 @@ fun AddExerciseView() {
     val exercises by addExerciseViewModel.getExercises().observeAsState(emptyList())
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = { Text(text = "New routine") },
+                modifier = Modifier
+                    .fillMaxWidth(),
                 colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = Accent,
                     titleContentColor = White
                 ),
-                actions = {
+                navigationIcon = {
                     IconButton(onClick = {
                         onBack()
                     }) {
