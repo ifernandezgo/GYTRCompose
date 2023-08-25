@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 
 private lateinit var addExerciseViewModel: AddExerciseViewModel
 private lateinit var exerciseId: String
+private var routine: Int? = null
 private lateinit var onBack: () -> Unit
 private lateinit var onAdd: (String) -> Unit
 
@@ -42,6 +43,7 @@ private lateinit var onAdd: (String) -> Unit
 fun AddExerciseSelected(
     viewModel: AddExerciseViewModel,
     exerciseSelected: String,
+    routineId: Int?,
     onBackClicked: () -> Unit,
     onAddExercise: (String) -> Unit
 ) {
@@ -49,6 +51,7 @@ fun AddExerciseSelected(
     onBack = onBackClicked
     onAdd = onAddExercise
     exerciseId = exerciseSelected
+    routine = routineId
     LaunchedEffect(true) {
         addExerciseViewModel.getExerciseByIdApi(exerciseId)
     }
@@ -112,6 +115,8 @@ private fun AddExerciseSelectedView() {
                             coroutineScope.launch {
                                 if(addExerciseViewModel.getExerciseById(exerciseDb.exerciseId) == null)
                                     addExerciseViewModel.insertExercise(exerciseDb)
+                                if(routine != null)
+                                    addExerciseViewModel.addExerciseToRoutine(routine!!, exerciseDb.exerciseId)
                             }
                             onAdd(exerciseId)
                         }

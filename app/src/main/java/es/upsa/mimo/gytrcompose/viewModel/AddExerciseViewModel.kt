@@ -68,4 +68,8 @@ class AddExerciseViewModel(application: Application): AndroidViewModel(applicati
     suspend fun insertExercise(exercise: Exercise) {
         dbRepository.insertExercise(exercise)
     }
+
+    suspend fun addExerciseToRoutine(routineId: Int, exerciseId: String) {
+        dbRepository.addExerciseToRoutine(routineId = routineId, exerciseId = exerciseId)
+    }
 }

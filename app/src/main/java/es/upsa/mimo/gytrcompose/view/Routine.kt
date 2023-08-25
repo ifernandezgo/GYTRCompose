@@ -41,15 +41,21 @@ import kotlinx.coroutines.launch
 
 private lateinit var routineViewModel: RoutineViewModel
 private lateinit var onBack: () -> Unit
+private lateinit var onEdit: (Int) -> Unit
+private lateinit var onStarTraining: (Int) -> Unit
 
 @Composable
 fun Routine(
     viewModel: RoutineViewModel,
     routineId: Int,
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    onEditRoutineClicked: (Int) -> Unit,
+    onStartTrainingClicked: (Int) -> Unit
 ) {
     routineViewModel = viewModel
     onBack = onBackClicked
+    onEdit = onEditRoutineClicked
+    onStarTraining = onStartTrainingClicked
     if(routineId != -1)
         RoutineView(routineId)
 }
@@ -94,7 +100,7 @@ private fun RoutineView(routineId: Int) {
                 },
                 actions = {
                     IconButton(onClick = {
-
+                        onEdit(routineId)
                     }) {
                         Icon(imageVector = Icons.Default.Edit, contentDescription = null)
                     }
