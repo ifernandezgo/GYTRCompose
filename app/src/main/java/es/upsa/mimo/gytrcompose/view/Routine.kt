@@ -20,20 +20,24 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import es.upsa.mimo.gytrcompose.model.Exercise
 import es.upsa.mimo.gytrcompose.model.Routine
+import es.upsa.mimo.gytrcompose.model.RoutineExerciseCrossRef
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
 import es.upsa.mimo.gytrcompose.ui.theme.White
 import es.upsa.mimo.gytrcompose.viewModel.RoutineViewModel
+import kotlinx.coroutines.launch
 
 private lateinit var routineViewModel: RoutineViewModel
 private lateinit var onBack: () -> Unit
@@ -55,7 +59,10 @@ fun Routine(
 private fun RoutineView(routineId: Int) {
     var routine by remember { mutableStateOf(Routine()) }
     val exercisesIds by routineViewModel.getRoutineExercises(routineId).observeAsState(emptyList())
+    val exercisesCrossRef by routineViewModel.getExercisesByRoutineId(routineId).observeAsState()
     var exercises by remember { mutableStateOf(listOf<Exercise>()) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(true) {
         val routineTmp = routineViewModel.getRoutineById(routineId)
@@ -132,12 +139,58 @@ private fun RoutineView(routineId: Int) {
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Accent
                 ),
-                onClick = {
-
-                }
+                onClick = { showDeleteDialog = true }
             ) {
                 Text(text = "Delete routine")
             }
+
+            DeleteRoutineDialog(
+                showDeleteDialog = showDeleteDialog,
+                onDismiss = {
+                    showDeleteDialog = false
+                },
+                onDelete = {
+                    showDeleteDialog = false
+                    coroutineScope.launch {
+                        deleteRoutine(routine, exercisesCrossRef)
+                        onBack()
+                    }
+                }
+            )
+
         }
     }
+}
+
+@Composable
+private fun DeleteRoutineDialog(
+    showDeleteDialog: Boolean,
+    onDismiss: () -> Unit,
+    onDelete: () -> Unit
+) {
+    if(showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { onDismiss() },
+            title = { Text(text = "Delete routine") },
+            text = { Text(text = "Do you really want to delete this routine?") },
+            confirmButton = {
+                Button(onClick = {
+                    onDelete()
+                }) {
+                    Text(text = "Confirm")
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    onDismiss()
+                }) {
+                    Text(text = "Cancel")
+                }
+            }
+        )
+    }
+}
+
+private suspend fun deleteRoutine(routine: Routine, exercises: List<RoutineExerciseCrossRef>?) {
+    routineViewModel.deleteRoutine(routine = routine, routineExercises = exercises)
 }
