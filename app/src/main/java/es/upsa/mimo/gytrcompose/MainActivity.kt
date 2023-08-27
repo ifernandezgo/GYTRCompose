@@ -37,11 +37,13 @@ import es.upsa.mimo.gytrcompose.viewModel.EditRoutineViewModel
 import es.upsa.mimo.gytrcompose.viewModel.ExercisesViewModel
 import es.upsa.mimo.gytrcompose.viewModel.MyRoutinesViewModel
 import es.upsa.mimo.gytrcompose.viewModel.NewRoutineViewModel
+import es.upsa.mimo.gytrcompose.viewModel.ProfileViewModel
 import es.upsa.mimo.gytrcompose.viewModel.RoutineViewModel
 import es.upsa.mimo.gytrcompose.viewModel.TrainingViewModel
 
 class MainActivity : ComponentActivity() {
 
+    private val profileViewModel by viewModels<ProfileViewModel>()
     private val exercisesViewModel by viewModels<ExercisesViewModel>()
     private val myRoutineViewModel by viewModels<MyRoutinesViewModel>()
     private val newRoutineViewModel by viewModels<NewRoutineViewModel>()
@@ -54,6 +56,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MainView(
+                profileViewModel,
                 exercisesViewModel,
                 myRoutineViewModel,
                 newRoutineViewModel,
@@ -70,6 +73,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainView(
+    profileViewModel: ProfileViewModel,
     exercisesViewModel: ExercisesViewModel,
     myRoutinesViewModel: MyRoutinesViewModel,
     newRoutineViewModel: NewRoutineViewModel,
@@ -93,7 +97,9 @@ private fun MainView(
                     .padding(bottom = 60.dp)
             ) {
                 composable(route = BottomNavItem.Profile.screen_route) {
-                    Profile()
+                    Profile(
+                        profileViewModel
+                    )
                 }
                 composable(route = BottomNavItem.MyRoutines.screen_route) {
                     MyRoutines(

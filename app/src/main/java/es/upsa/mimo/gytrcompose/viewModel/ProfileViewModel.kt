@@ -9,11 +9,11 @@ import es.upsa.mimo.gytrcompose.model.History
 import es.upsa.mimo.gytrcompose.model.Routine
 import es.upsa.mimo.gytrcompose.model.Serie
 
-class ProfileViewModel(private val application: Application): AndroidViewModel(application) {
+class ProfileViewModel(application: Application): AndroidViewModel(application) {
 
     private var repository: DbRepository = DbRepository(application)
 
-    suspend fun getMyHistories(): LiveData<List<History>> = repository.getMyHistories()
+    fun getMyHistories(): LiveData<List<History>> = repository.getMyHistories()
 
     suspend fun getRoutineById(routineId: Int): Routine? = repository.getRoutineById(routineId)
 
