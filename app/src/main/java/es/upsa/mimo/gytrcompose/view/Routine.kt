@@ -124,7 +124,7 @@ private fun RoutineView(routineId: Int) {
                         containerColor = Accent
                     ),
                     onClick = {
-
+                        onStarTraining(routineId)
                     }
                 ) {
                     Text(text = "Start training")
