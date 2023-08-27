@@ -103,8 +103,8 @@ class DbRepository(application: Application) {
         historyDao.insertHistory(history)
     }
 
-    suspend fun getMyHistories(): LiveData<List<History>> = withContext(Dispatchers.IO) {
-        historyDao.getHistories()
+    fun getMyHistories(): LiveData<List<History>> {
+        return historyDao.getHistories()
     }
 
     suspend fun getSerieByHistoryId(historyId: Int): List<Serie> = withContext(Dispatchers.IO) {
