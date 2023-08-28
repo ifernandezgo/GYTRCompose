@@ -1,7 +1,6 @@
 package es.upsa.mimo.gytrcompose
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -43,9 +42,6 @@ import es.upsa.mimo.gytrcompose.viewModel.NewRoutineViewModel
 import es.upsa.mimo.gytrcompose.viewModel.ProfileViewModel
 import es.upsa.mimo.gytrcompose.viewModel.RoutineViewModel
 import es.upsa.mimo.gytrcompose.viewModel.TrainingViewModel
-import androidx.datastore.preferences.preferencesDataStore
-
-val Context.dataStore by preferencesDataStore(name = "settings")
 
 class MainActivity : ComponentActivity() {
 
