@@ -93,9 +93,13 @@ dependencies {
     //implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
     implementation "androidx.compose.runtime:runtime-livedata:1.5.0"
 
-
     //Glide
     implementation 'com.github.bumptech.glide:compose:1.0.0-alpha.1'
+
+    //Preferences
+    implementation 'androidx.datastore:datastore-preferences-core:1.0.0'
+    implementation 'androidx.datastore:datastore-core:1.0.0'
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
