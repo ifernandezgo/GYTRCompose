@@ -1,6 +1,5 @@
 package es.upsa.mimo.gytrcompose.view
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,6 +37,7 @@ import es.upsa.mimo.gytrcompose.ui.theme.White
 import es.upsa.mimo.gytrcompose.viewModel.ProfileViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 private lateinit var profileViewModel: ProfileViewModel
 
@@ -49,7 +49,7 @@ fun Profile(
     ProfileView()
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 private fun ProfileView() {
@@ -58,7 +58,7 @@ private fun ProfileView() {
     var series by remember { mutableStateOf(mapOf<Int, List<Exercise>>()) }
     var seriesCounter by remember { mutableStateOf(mapOf<Int, Map<String, Int>>()) }
 
-    val dateFormatter = SimpleDateFormat("dd-MM-yyyy")
+    val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.US)
 
     LaunchedEffect(histories) {
         val routinesTmp = mutableMapOf<Int, Routine>()

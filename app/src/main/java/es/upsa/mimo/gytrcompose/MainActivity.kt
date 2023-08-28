@@ -12,6 +12,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
@@ -83,10 +85,19 @@ private fun MainView(
     trainingViewModel: TrainingViewModel
 ) {
     val navController = rememberNavController()
+    val showBottomAppBar = remember { mutableStateOf(true) }
+    val paddingValue = remember { mutableStateOf(60.dp) }
+
+    if(showBottomAppBar.value)
+        paddingValue.value = 60.dp
+    else
+        paddingValue.value = 0.dp
+
     Screen {
         Scaffold(
             bottomBar = {
-                BottomNavigation(navController = navController)
+                if(showBottomAppBar.value)
+                    BottomNavigation(navController = navController)
             },
         ) {
             NavHost(
@@ -94,7 +105,7 @@ private fun MainView(
                 startDestination = "profile",
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(bottom = 60.dp)
+                    .padding(bottom = paddingValue.value)
             ) {
                 composable(route = BottomNavItem.Profile.screen_route) {
                     Profile(
@@ -180,7 +191,10 @@ private fun MainView(
                         routineId = routineId ?: -1,
                         onBackClicked = { navController.navigate(BottomNavItem.MyRoutines.screen_route) },
                         onEditRoutineClicked = { id -> navController.navigate("editRoutine/$id") },
-                        onStartTrainingClicked = { id -> navController.navigate("training/$id") }
+                        onStartTrainingClicked = { id ->
+                            showBottomAppBar.value = false
+                            navController.navigate("training/$id")
+                        }
                     )
                 }
                 composable(
@@ -203,7 +217,10 @@ private fun MainView(
                     Training(
                         viewModel = trainingViewModel,
                         routineId = routineId ?: -1,
-                        onFinishedClicked = { navController.popBackStack() }
+                        onFinishedClicked = {
+                            showBottomAppBar.value = true
+                            navController.popBackStack()
+                        }
                     )
                 }
             }

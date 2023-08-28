@@ -45,6 +45,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -107,6 +109,8 @@ private fun TrainingView(routineId: Int) {
     var durationText by remember { mutableStateOf("") }
     val setsCompleted = remember { mutableIntStateOf(0) }
 
+    var showSaveDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(true) {
         val routineTmp = trainingViewModel.getRoutineById(routineId)
         if(routineTmp != null) {
@@ -125,7 +129,6 @@ private fun TrainingView(routineId: Int) {
             exercises = trainingViewModel.getExercisesById(exercisesIds!!) ?: emptyList()
         }
     }
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -137,13 +140,7 @@ private fun TrainingView(routineId: Int) {
                 actions = {
                     IconButton(onClick = {
                         timer.cancel()
-                        //TODO sacar diálogo de si desea guardar la rutina
-                        val history = History(time = durationTimer, routineId = routineId, historyId = 0)
-                        coroutineScope.launch {
-                            saveTraining(history)
-                            seriesCompleted = ArrayList()
-                        }
-                        onFinish()
+                        showSaveDialog = true
                     }) {
                         Icon(imageVector = Icons.Default.Done, contentDescription = null)
                     }
@@ -175,6 +172,23 @@ private fun TrainingView(routineId: Int) {
                     color = Accent
                 )
             }
+
+            SaveTrainingDialog(
+                showSaveDialog = showSaveDialog,
+                onDismiss = {
+                    showSaveDialog = false
+                    onFinish()
+                },
+                onSave = {
+                    showSaveDialog = false
+                    val history = History(time = durationTimer, routineId = routineId, historyId = 0)
+                    coroutineScope.launch {
+                        saveTraining(history)
+                        seriesCompleted = ArrayList()
+                    }
+                    onFinish()
+                }
+            )
         }
     }
 }
@@ -424,6 +438,35 @@ private fun ExerciseSets(exercise: Exercise, numberOfSet: Int, setsCompleted: Mu
                 contentDescription = null
             )
         }
+    }
+}
+
+@Composable
+private fun SaveTrainingDialog(
+    showSaveDialog: Boolean,
+    onDismiss: () -> Unit,
+    onSave: () -> Unit
+) {
+    if(showSaveDialog) {
+        AlertDialog(
+            onDismissRequest = { onDismiss() },
+            title = { Text(text = "Save training") },
+            text = { Text(text = "Do you really want to save this training?") },
+            confirmButton = {
+                Button(onClick = {
+                    onSave()
+                }) {
+                    Text(text = "Save")
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    onDismiss()
+                }) {
+                    Text(text = "Cancel")
+                }
+            }
+        )
     }
 }
 
