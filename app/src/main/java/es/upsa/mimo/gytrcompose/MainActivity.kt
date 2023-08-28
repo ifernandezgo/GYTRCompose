@@ -1,9 +1,16 @@
 package es.upsa.mimo.gytrcompose
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,6 +23,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,6 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import es.upsa.mimo.gytrcompose.bottomNavigation.BottomNavItem
 import es.upsa.mimo.gytrcompose.bottomNavigation.BottomNavigation
+import es.upsa.mimo.gytrcompose.common.Constants
 import es.upsa.mimo.gytrcompose.ui.theme.GYTRComposeTheme
 import es.upsa.mimo.gytrcompose.view.AddExercise
 import es.upsa.mimo.gytrcompose.view.AddExerciseSelected
@@ -54,8 +64,13 @@ class MainActivity : ComponentActivity() {
     private val editRoutineViewModel by viewModels<EditRoutineViewModel>()
     private val trainingViewModel by viewModels<TrainingViewModel>()
 
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             MainView(
                 profileViewModel,
@@ -67,6 +82,26 @@ class MainActivity : ComponentActivity() {
                 editRoutineViewModel,
                 trainingViewModel
             )
+        }
+
+        createNotificationChannel()
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requestPermissionLauncher.launch(
+                    Manifest.permission.POST_NOTIFICATIONS
+                )
+            }
+        }
+    }
+
+    private fun createNotificationChannel() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(Constants.restNotificationChannel, "Rest timer", NotificationManager.IMPORTANCE_DEFAULT)
+            channel.description = "Channel used for notify when rest time has finished"
+
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
         }
     }
 }

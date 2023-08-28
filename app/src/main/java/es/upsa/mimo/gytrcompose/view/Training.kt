@@ -1,5 +1,10 @@
 package es.upsa.mimo.gytrcompose.view
 
+import android.Manifest
+import android.app.NotificationManager
+import android.content.Context
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.CountDownTimer
 import android.util.Log
 import androidx.compose.foundation.background
@@ -53,20 +58,27 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import es.upsa.mimo.gytrcompose.R
+import es.upsa.mimo.gytrcompose.common.Constants
 import es.upsa.mimo.gytrcompose.model.History
 import es.upsa.mimo.gytrcompose.ui.theme.completed
+import es.upsa.mimo.gytrcompose.viewModel.SettingsViewModel
 import kotlinx.coroutines.launch
 import java.util.Timer
 import java.util.TimerTask
@@ -75,7 +87,7 @@ private lateinit var trainingViewModel: TrainingViewModel
 private lateinit var onFinish: () -> Unit
 private lateinit var timer: Timer
 private var restTimer: CountDownTimer? = null
-private var numberOfSets: Int = 4 //TODO
+private var numberOfSets: Int = 4
 private var durationRestTimer = 60f
 private var seriesCompleted = ArrayList<Serie>()
 
@@ -87,16 +99,20 @@ fun Training(
 ) {
     trainingViewModel = viewModel
     onFinish = onFinishedClicked
-    numberOfSets = 4
     timer = Timer()
+
+    val settingsViewModel = SettingsViewModel(LocalContext.current)
+    numberOfSets = settingsViewModel.getSets.collectAsState(initial = 4).value
+    durationRestTimer = getRestTimerDuration(settingsViewModel.getDuration.collectAsState(initial = "1min").value)
+
     Log.d("ROUTINE ID", routineId.toString())
     if(routineId != -1)
-        TrainingView(routineId)
+        TrainingView(routineId, settingsViewModel)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TrainingView(routineId: Int) {
+private fun TrainingView(routineId: Int, settingsViewModel: SettingsViewModel) {
     var routine by remember { mutableStateOf(Routine()) }
     val exercisesIds by trainingViewModel.getRoutineExercises(routineId).observeAsState(emptyList())
     var exercises by remember { mutableStateOf(listOf<Exercise>()) }
@@ -160,7 +176,8 @@ private fun TrainingView(routineId: Int) {
                         TrainingExercise(
                             exercise = exercise,
                             setsCompleted = setsCompleted,
-                            restTimerCount
+                            restTimerCount = restTimerCount,
+                            settingsViewModel = settingsViewModel
                         )
                     }
                 }
@@ -232,12 +249,17 @@ private fun Header(durationText: String, setsCompleted: MutableState<Int>) {
 }
 
 @Composable
-private fun TrainingExercise(exercise: Exercise, setsCompleted: MutableState<Int>, restTimerCount: MutableState<Float>) {
+private fun TrainingExercise(
+    exercise: Exercise,
+    setsCompleted: MutableState<Int>,
+    restTimerCount: MutableState<Float>,
+    settingsViewModel: SettingsViewModel
+) {
     Column {
         ExerciseHeader(exercise = exercise)
         SetsHeader()
         for(i in 1..numberOfSets) {
-            ExerciseSets(exercise, i, setsCompleted, restTimerCount)
+            ExerciseSets(exercise, i, setsCompleted, restTimerCount, settingsViewModel)
         }
     }
 }
@@ -304,20 +326,31 @@ private fun SetsHeader() {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-private fun ExerciseSets(exercise: Exercise, numberOfSet: Int, setsCompleted: MutableState<Int>, restTimerCount: MutableState<Float>) {
+private fun ExerciseSets(
+    exercise: Exercise,
+    numberOfSet: Int,
+    setsCompleted: MutableState<Int>,
+    restTimerCount: MutableState<Float>,
+    settingsViewModel: SettingsViewModel
+) {
     var reps by remember { mutableStateOf("") }
     var weight by remember { mutableStateOf("") }
     var finished by remember { mutableStateOf(false) }
     var series by remember { mutableStateOf(listOf<Serie>()) }
 
     LaunchedEffect(true) {
-        series = trainingViewModel.getExerciseLastSeries(exercise.exerciseId, 4)
+        series = trainingViewModel.getExerciseLastSeries(exercise.exerciseId, numberOfSets)
     }
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
     val background = if(finished) completed else MaterialTheme.colorScheme.background
+
+    val restTimerEnabled = settingsViewModel.getTimerEnabled.collectAsState(initial = true)
+    val notificationEnabled = settingsViewModel.getNotificationEnabled.collectAsState(initial = true)
+
+    val context = LocalContext.current
 
     Row(
         modifier = Modifier
@@ -413,22 +446,38 @@ private fun ExerciseSets(exercise: Exercise, numberOfSet: Int, setsCompleted: Mu
                 val serie = Serie(repetitions = reps.toInt(), weight = weight.toFloat(), exerciseId = exercise.exerciseId)
                 seriesCompleted.add(serie)
                 setsCompleted.value += 1
-                //TODO Rest timer enabled
-                restTimerCount.value = 0f
-                restTimer?.cancel()
-                restTimer = object : CountDownTimer((durationRestTimer*1000).toLong(), 1000) {
-                    override fun onTick(millisUntilFinished: Long) {
-                        restTimerCount.value += 1
-                        Log.d("REEST", (restTimerCount.value/ durationRestTimer).toString())
-                    }
+                if(restTimerEnabled.value) {
+                    restTimerCount.value = 0f
+                    restTimer?.cancel()
+                    restTimer = object : CountDownTimer((durationRestTimer * 1000).toLong(), 1000) {
+                        override fun onTick(millisUntilFinished: Long) {
+                            restTimerCount.value += 1
+                            Log.d("REEST", (restTimerCount.value / durationRestTimer).toString())
+                        }
 
-                    override fun onFinish() {
-                        restTimerCount.value = 0f
-                        //binding.pbRestTraining.progress = 0
-                        //showRestTimeNotification()
-                        //TODO notification
-                    }
-                }.start()
+                        override fun onFinish() {
+                            restTimerCount.value = 0f
+                            if(notificationEnabled.value) {
+                                if (ActivityCompat.checkSelfPermission(
+                                        context,
+                                        Manifest.permission.POST_NOTIFICATIONS
+                                    ) == PackageManager.PERMISSION_GRANTED
+                                ) {
+                                    val notification =
+                                        NotificationCompat.Builder(context, Constants.restNotificationChannel)
+                                            .setSmallIcon(R.drawable.icon)
+                                            .setContentTitle("Rest time")
+                                            .setContentText("Rest time has finished!")
+                                            .setSound(Uri.parse("android.resource://"+context.packageName+"/"+R.raw.whistle))
+                                            .build()
+                                    val notificationManager =
+                                        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                                    notificationManager.notify(Constants.restNotificationId, notification)
+                                }
+                            }
+                        }
+                    }.start()
+                }
             },
             enabled = !finished
         ) {
@@ -494,4 +543,20 @@ private suspend fun saveTraining(history: History) {
         newSerie.historyId = historyId.toInt()
     }
     trainingViewModel.insertSeries(seriesList)
+}
+
+private fun getRestTimerDuration(duration: String): Float {
+    return when(duration) {
+        "30s" -> 30f
+        "1min" -> 60f
+        "1min 30s" -> 90f
+        "2min" -> 120f
+        "2min 30s" -> 150f
+        "3min" -> 180f
+        "3min 30s" -> 210f
+        "4min" -> 240f
+        "4min 30s" -> 270f
+        "5min" -> 300f
+        else -> 60f
+    }
 }
