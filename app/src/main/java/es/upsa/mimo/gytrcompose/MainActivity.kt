@@ -178,13 +178,13 @@ private fun MainView(
                 }
                 composable(
                     route = "addExercise?routineId={routineId}",
-                    arguments = listOf(navArgument("routineId") { type = NavType.IntType })
+                    arguments = listOf(navArgument("routineId") { defaultValue = -1 })
                 ) { navBackStackEntry ->
                     val routineId = navBackStackEntry.arguments?.getInt("routineId")
                     AddExercise(
                         viewModel = addExerciseViewModel,
                         onExerciseSelected = { exSelected ->
-                            if (routineId == null)
+                            if (routineId == -1)
                                 navController.navigate("addExerciseSelected/$exSelected")
                             else
                                 navController.navigate("addExerciseSelected/$exSelected?routineId=$routineId")
@@ -196,7 +196,7 @@ private fun MainView(
                     route = "addExerciseSelected/{exerciseSelected}?routineId={routineId}",
                     arguments = listOf(
                         navArgument("exerciseSelected") { type = NavType.StringType },
-                        navArgument("routineId") { type = NavType.IntType }
+                        navArgument("routineId") { defaultValue = -1 }
                     )
                 ) { navBackStackEntry ->
                     val exerciseSelected =
@@ -208,7 +208,7 @@ private fun MainView(
                         routineId = routineId,
                         onBackClicked = { navController.popBackStack() },
                         onAddExercise = { exercise ->
-                            if (routineId == null)
+                            if (routineId == -1)
                                 navController.navigate("newRoutine?exerciseId=$exercise")
                             else
                                 navController.navigate("editRoutine/$routineId")

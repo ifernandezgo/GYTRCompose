@@ -91,7 +91,7 @@ private fun DropDownMenus() {
 
     var targetExpanded by remember { mutableStateOf(false) }
     var musclesExpanded by remember { mutableStateOf(false) }
-    var bodyPartsSelected by remember { mutableStateOf(false) }
+    var bodyPartsSelected by remember { mutableStateOf(true) }
 
     val targetTypes = context.resources.getStringArray(R.array.targetTypes)
     val bodyParts = context.resources.getStringArray(R.array.body_parts)

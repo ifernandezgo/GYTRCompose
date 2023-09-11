@@ -100,12 +100,11 @@ private fun ProfileView() {
             )
         },
     ) {
-        Box(modifier = Modifier.padding(it)) {
+        Box(modifier = Modifier.padding(it).fillMaxSize()) {
             if(histories.isEmpty()) {
                 Text(
-                    text = "No histories",
+                    text = "No trainings registered yet",
                     modifier = Modifier
-                        .fillMaxSize()
                         .align(Alignment.Center)
                 )
             } else {
