@@ -141,22 +141,22 @@ private fun MainView(
                     .fillMaxSize()
                     .padding(bottom = paddingValue.value)
             ) {
-                composable(route = BottomNavItem.Profile.screen_route) {
+                composable(route = BottomNavItem.Profile.screenRoute) {
                     Profile(
                         profileViewModel
                     )
                 }
-                composable(route = BottomNavItem.MyRoutines.screen_route) {
+                composable(route = BottomNavItem.MyRoutines.screenRoute) {
                     MyRoutines(
                         myRoutinesViewModel,
                         onNewRoutineClicked = { navController.navigate("newRoutine") },
                         onRoutineClicked = { id -> navController.navigate("routine/$id") }
                     )
                 }
-                composable(route = BottomNavItem.Exercises.screen_route) {
+                composable(route = BottomNavItem.Exercises.screenRoute) {
                     Exercises(exercisesViewModel)
                 }
-                composable(route = BottomNavItem.Settings.screen_route) {
+                composable(route = BottomNavItem.Settings.screenRoute) {
                     Settings()
                 }
                 composable(
@@ -171,7 +171,7 @@ private fun MainView(
                             navController.navigate("addExercise")
                         },
                         onSaveRoutine = {
-                            navController.navigate(BottomNavItem.MyRoutines.screen_route)
+                            navController.navigate(BottomNavItem.MyRoutines.screenRoute)
                         },
                         newExercise = exerciseId ?: ""
                     )
@@ -223,7 +223,7 @@ private fun MainView(
                     Routine(
                         viewModel = routineViewModel,
                         routineId = routineId ?: -1,
-                        onBackClicked = { navController.navigate(BottomNavItem.MyRoutines.screen_route) },
+                        onBackClicked = { navController.navigate(BottomNavItem.MyRoutines.screenRoute) },
                         onEditRoutineClicked = { id -> navController.navigate("editRoutine/$id") },
                         onStartTrainingClicked = { id ->
                             showBottomAppBar.value = false

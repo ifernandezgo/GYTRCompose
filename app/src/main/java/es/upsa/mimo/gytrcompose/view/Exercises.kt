@@ -35,7 +35,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import es.upsa.mimo.gytrcompose.R
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
@@ -118,6 +120,12 @@ private fun DropDownMenus() {
                             expanded = targetExpanded
                         )
                     },
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    textStyle = TextStyle(textAlign = TextAlign.Center)
                 )
                 ExposedDropdownMenu(
                     expanded = targetExpanded,
@@ -163,7 +171,12 @@ private fun DropDownMenus() {
                         )
                     },
                     modifier = Modifier.menuAnchor(),
-                    colors = ExposedDropdownMenuDefaults.textFieldColors()
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    textStyle = TextStyle(textAlign = TextAlign.Center)
                 )
                 ExposedDropdownMenu(
                     expanded = musclesExpanded,

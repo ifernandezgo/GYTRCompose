@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -140,7 +141,8 @@ private fun AddExerciseSelectedView() {
                         .align(Alignment.BottomCenter)
                         .padding(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Accent
+                        containerColor = Accent,
+                        contentColor = White
                     ),
                     onClick = {
                         val exerciseDb = Exercise(
@@ -158,7 +160,8 @@ private fun AddExerciseSelectedView() {
                                 addExerciseViewModel.addExerciseToRoutine(routine!!, exerciseDb.exerciseId)
                         }
                         onAdd(exerciseId)
-                    }
+                    },
+                    shape = RoundedCornerShape(12.dp)
                 ) {
                     Text(text = "Add exercise")
                 }

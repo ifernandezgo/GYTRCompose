@@ -58,6 +58,9 @@ import es.upsa.mimo.gytrcompose.viewModel.AddExerciseViewModel
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 
 
 private lateinit var addExerciseViewModel: AddExerciseViewModel
@@ -155,6 +158,12 @@ private fun DropDownMenusAddEx() {
                             expanded = targetExpanded
                         )
                     },
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    textStyle = TextStyle(textAlign = TextAlign.Center)
                 )
                 ExposedDropdownMenu(
                     expanded = targetExpanded,
@@ -200,7 +209,12 @@ private fun DropDownMenusAddEx() {
                         )
                     },
                     modifier = Modifier.menuAnchor(),
-                    colors = ExposedDropdownMenuDefaults.textFieldColors()
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    textStyle = TextStyle(textAlign = TextAlign.Center)
                 )
                 ExposedDropdownMenu(
                     expanded = musclesExpanded,
@@ -296,11 +310,15 @@ private fun ExerciseRow(
             model = exercise.gifUrl,
             contentDescription = exercise.name,
             modifier = Modifier
-                .height(70.dp)
-                .width(70.dp)
+                .height(90.dp)
+                .width(90.dp)
                 .padding(16.dp)
         )
-        Column(modifier = Modifier.fillMaxHeight()) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .align(Alignment.CenterVertically)
+        ) {
             Text(
                 text = exercise.name,
                 fontWeight = FontWeight.Bold,

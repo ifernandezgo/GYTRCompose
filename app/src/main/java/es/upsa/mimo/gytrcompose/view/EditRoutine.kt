@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -168,11 +169,13 @@ private fun EditRoutineView(routineId: Int) {
                     .align(Alignment.BottomCenter)
                     .padding(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Accent
+                    containerColor = Accent,
+                    contentColor = White
                 ),
                 onClick = {
                     onAddExercise()
-                }
+                },
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Text(text = "Add exercise")
             }
@@ -194,11 +197,16 @@ private fun EditRoutineExercise(
             model = exercise.gifUrl,
             contentDescription = exercise.name,
             modifier = Modifier
-                .height(70.dp)
-                .width(70.dp)
+                .height(90.dp)
+                .width(90.dp)
                 .padding(16.dp)
         )
-        Column(modifier = Modifier.fillMaxHeight().weight(1f)) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f)
+                .align(Alignment.CenterVertically)
+        ) {
             Text(
                 text = exercise.name,
                 fontWeight = FontWeight.Bold,

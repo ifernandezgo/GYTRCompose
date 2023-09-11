@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -71,11 +72,13 @@ private fun MyRoutinesView() {
                         .fillMaxWidth()
                         .padding(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Accent
+                        containerColor = Accent,
+                        contentColor = White
                     ),
                     onClick = {
                         onNewRoutine()
-                    }
+                    },
+                    shape = RoundedCornerShape(12.dp)
                 ) {
                     Text(text = "New routine")
                 }

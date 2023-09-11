@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -154,11 +155,13 @@ private fun NewRoutineView(newExercise: String) {
                     .align(Alignment.BottomCenter)
                     .padding(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Accent
+                    containerColor = Accent,
+                    contentColor = White
                 ),
                 onClick = {
                     onAddExercise()
-                }
+                },
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Text(text = "Add exercise")
             }

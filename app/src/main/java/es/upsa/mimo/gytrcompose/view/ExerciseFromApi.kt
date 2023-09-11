@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,11 +35,15 @@ fun ExerciseFromApi(
             model = exercise.gifUrl,
             contentDescription = exercise.name,
             modifier = Modifier
-                .height(70.dp)
-                .width(70.dp)
+                .height(90.dp)
+                .width(90.dp)
                 .padding(16.dp)
         )
-        Column(modifier = Modifier.fillMaxHeight()) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .align(Alignment.CenterVertically)
+        ) {
             Text(
                 text = exercise.name,
                 fontWeight = FontWeight.Bold,
