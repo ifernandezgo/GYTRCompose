@@ -164,11 +164,18 @@ private fun TrainingView(routineId: Int, settingsViewModel: SettingsViewModel) {
             )
         },
     ) {
-        Box(modifier = Modifier.padding(it)) {
+        Box(modifier = Modifier.padding(it).fillMaxSize()) {
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
                 Header(durationText = durationText, setsCompleted)
+                LinearProgressIndicator(
+                    progress = restTimerCount.floatValue/durationRestTimer,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(10.dp),
+                    color = Accent
+                )
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -181,13 +188,6 @@ private fun TrainingView(routineId: Int, settingsViewModel: SettingsViewModel) {
                         )
                     }
                 }
-                LinearProgressIndicator(
-                    progress = restTimerCount.floatValue/durationRestTimer,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(30.dp),
-                    color = Accent
-                )
             }
 
             SaveTrainingDialog(
