@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import es.upsa.mimo.gytrcompose.R
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
+import es.upsa.mimo.gytrcompose.ui.theme.Black
 import es.upsa.mimo.gytrcompose.ui.theme.White
 import es.upsa.mimo.gytrcompose.viewModel.ExercisesViewModel
 import kotlinx.coroutines.launch
@@ -122,8 +123,8 @@ private fun DropDownMenus() {
                     },
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
+                        focusedIndicatorColor = Black,
+                        unfocusedIndicatorColor = Black
                     ),
                     textStyle = TextStyle(textAlign = TextAlign.Center)
                 )
@@ -173,8 +174,8 @@ private fun DropDownMenus() {
                     modifier = Modifier.menuAnchor(),
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
+                        focusedIndicatorColor = Black,
+                        unfocusedIndicatorColor = Black
                     ),
                     textStyle = TextStyle(textAlign = TextAlign.Center)
                 )

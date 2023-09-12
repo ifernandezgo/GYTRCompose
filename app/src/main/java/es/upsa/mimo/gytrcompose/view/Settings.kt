@@ -13,6 +13,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -35,7 +36,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import es.upsa.mimo.gytrcompose.R
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
+import es.upsa.mimo.gytrcompose.ui.theme.AccentDarker
 import es.upsa.mimo.gytrcompose.ui.theme.White
+import es.upsa.mimo.gytrcompose.ui.theme.standard
 import es.upsa.mimo.gytrcompose.viewModel.SettingsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -194,7 +197,13 @@ private fun RestTimerSettings(settingsViewModel: SettingsViewModel) {
                     CoroutineScope(Dispatchers.IO).launch {
                         settingsViewModel.saveTimerEnabled(enabled)
                     }
-                }
+                },
+                colors = SwitchDefaults.colors(
+                    checkedTrackColor = AccentDarker,
+                    checkedThumbColor = White,
+                    uncheckedThumbColor = White,
+                    uncheckedTrackColor = standard
+                )
             )
         }
         Row(
@@ -271,7 +280,11 @@ private fun RestTimerSettings(settingsViewModel: SettingsViewModel) {
                     CoroutineScope(Dispatchers.IO).launch {
                         settingsViewModel.saveNotificationEnabled(enabled)
                     }
-                }
+                },
+                colors = SwitchDefaults.colors(
+                    checkedTrackColor = AccentDarker,
+                    uncheckedTrackColor = standard
+                )
             )
         }
     }
