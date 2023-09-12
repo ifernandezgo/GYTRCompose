@@ -109,6 +109,7 @@ private fun NewRoutineView(newExercise: String) {
                             if(saved) {
                                 exList = listOf()
                                 exercises = ArrayList()
+                                name = ""
                                 onSave()
                             }
                         }

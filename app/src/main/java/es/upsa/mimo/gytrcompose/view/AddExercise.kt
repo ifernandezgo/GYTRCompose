@@ -61,6 +61,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import es.upsa.mimo.gytrcompose.ui.theme.Black
 
 
 private lateinit var addExerciseViewModel: AddExerciseViewModel
@@ -160,8 +161,8 @@ private fun DropDownMenusAddEx() {
                     },
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
+                        focusedIndicatorColor = Black,
+                        unfocusedIndicatorColor = Black
                     ),
                     textStyle = TextStyle(textAlign = TextAlign.Center)
                 )
@@ -211,8 +212,8 @@ private fun DropDownMenusAddEx() {
                     modifier = Modifier.menuAnchor(),
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
+                        focusedIndicatorColor = Black,
+                        unfocusedIndicatorColor = Black
                     ),
                     textStyle = TextStyle(textAlign = TextAlign.Center)
                 )
