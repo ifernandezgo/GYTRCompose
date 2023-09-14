@@ -219,7 +219,8 @@ private fun EditRoutineExercise(
         }
         IconButton(
             modifier = Modifier
-                .weight(0.5f),
+                .weight(0.5f)
+                .align(Alignment.CenterVertically),
             onClick = {
                 coroutineScope.launch {
                     editRoutineViewModel.deleteExerciseFromRoutine(
