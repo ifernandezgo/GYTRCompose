@@ -283,6 +283,8 @@ private fun RestTimerSettings(settingsViewModel: SettingsViewModel) {
                 },
                 colors = SwitchDefaults.colors(
                     checkedTrackColor = AccentDarker,
+                    checkedThumbColor = White,
+                    uncheckedThumbColor = White,
                     uncheckedTrackColor = standard
                 )
             )
