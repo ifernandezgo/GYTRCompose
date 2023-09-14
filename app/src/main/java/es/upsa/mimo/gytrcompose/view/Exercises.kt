@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -41,7 +42,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import es.upsa.mimo.gytrcompose.R
 import es.upsa.mimo.gytrcompose.ui.theme.Accent
-import es.upsa.mimo.gytrcompose.ui.theme.Black
 import es.upsa.mimo.gytrcompose.ui.theme.White
 import es.upsa.mimo.gytrcompose.viewModel.ExercisesViewModel
 import kotlinx.coroutines.launch
@@ -74,6 +74,7 @@ private fun ExercisesView() {
             Column {
                 SearchBar()
                 DropDownMenus()
+                Divider()
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -123,8 +124,8 @@ private fun DropDownMenus() {
                     },
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.Transparent,
-                        focusedIndicatorColor = Black,
-                        unfocusedIndicatorColor = Black
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
                     ),
                     textStyle = TextStyle(textAlign = TextAlign.Center)
                 )
@@ -174,8 +175,8 @@ private fun DropDownMenus() {
                     modifier = Modifier.menuAnchor(),
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.Transparent,
-                        focusedIndicatorColor = Black,
-                        unfocusedIndicatorColor = Black
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
                     ),
                     textStyle = TextStyle(textAlign = TextAlign.Center)
                 )

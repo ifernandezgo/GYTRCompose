@@ -58,11 +58,10 @@ import es.upsa.mimo.gytrcompose.viewModel.AddExerciseViewModel
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import es.upsa.mimo.gytrcompose.ui.theme.Black
-
 
 private lateinit var addExerciseViewModel: AddExerciseViewModel
 private lateinit var onBack: () -> Unit
@@ -110,6 +109,7 @@ private fun AddExerciseView() {
             Column {
                 SearchBarAddEx()
                 DropDownMenusAddEx()
+                Divider()
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -161,8 +161,8 @@ private fun DropDownMenusAddEx() {
                     },
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.Transparent,
-                        focusedIndicatorColor = Black,
-                        unfocusedIndicatorColor = Black
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
                     ),
                     textStyle = TextStyle(textAlign = TextAlign.Center)
                 )
@@ -212,8 +212,8 @@ private fun DropDownMenusAddEx() {
                     modifier = Modifier.menuAnchor(),
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.Transparent,
-                        focusedIndicatorColor = Black,
-                        unfocusedIndicatorColor = Black
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
                     ),
                     textStyle = TextStyle(textAlign = TextAlign.Center)
                 )
