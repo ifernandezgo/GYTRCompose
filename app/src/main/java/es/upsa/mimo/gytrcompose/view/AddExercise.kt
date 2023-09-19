@@ -86,6 +86,7 @@ fun AddExercise(
 private fun AddExerciseView() {
     val exercises by addExerciseViewModel.getExercises().observeAsState(emptyList())
     Scaffold(
+        //Barra superior con el nombre de la pantalla y el color corereespondiente
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(text = "New routine") },
@@ -107,21 +108,57 @@ private fun AddExerciseView() {
     ) {
         Box(modifier = Modifier.padding(it)) {
             Column {
+                //Barra de búsqueda
                 SearchBarAddEx()
+                //Botones con menú desplegables
                 DropDownMenusAddEx()
                 Divider()
+                //Lista de ejercicios
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .selectableGroup()
                 ) {
                     items(exercises) { exercise ->
+                        //Fila para cada uno de los ejercicios
                         ExerciseRow(exercise = exercise)
                     }
                 }
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@Composable
+private fun SearchBarAddEx() {
+    var text by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
+    //Barra de búsqueda
+    TextField(
+        value = text,
+        onValueChange = { text = it },
+        label = { Text("Search exercise") },
+        //Icono de búsuqeda al inicio
+        leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+        modifier = Modifier
+            .fillMaxWidth(),
+        colors = TextFieldDefaults.textFieldColors(
+            containerColor = Color.Transparent
+        ),
+        //Control del teclado
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(onSearch = {
+            coroutineScope.launch {
+                onSearchAddEx(text)
+            }
+            keyboardController?.hide()
+            focusManager.clearFocus()
+        })
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -141,8 +178,10 @@ private fun DropDownMenusAddEx() {
     var selectedTargetText by remember { mutableStateOf(targetTypes[0]) }
     var selectedMuscleText by remember { mutableStateOf(bodyParts[0]) }
 
+    //Fila que contenga dos Box con cada uno de los menús
     Row(modifier = Modifier.fillMaxWidth()) {
         Box(modifier = Modifier.weight(1f)) {
+            //Menú para seleccionar parte del cuerpo o músuclo
             ExposedDropdownMenuBox(
                 expanded = targetExpanded,
                 onExpandedChange = {
@@ -194,6 +233,7 @@ private fun DropDownMenusAddEx() {
             }
         }
         Box(modifier = Modifier.weight(1f)) {
+            //Menú para seleccionar el filtro final
             ExposedDropdownMenuBox(
                 expanded = musclesExpanded,
                 onExpandedChange = {
@@ -224,7 +264,6 @@ private fun DropDownMenusAddEx() {
                     }
                 ) {
                     if (bodyPartsSelected) {
-                        //selectedMuscleText = bodyParts[0]
                         bodyParts.forEach { bodyPart ->
                             DropdownMenuItem(
                                 text = { Text(text = bodyPart) },
@@ -240,7 +279,6 @@ private fun DropDownMenusAddEx() {
                             )
                         }
                     } else {
-                        //selectedMuscleText = muscles[0]
                         muscles.forEach { muscle ->
                             DropdownMenuItem(
                                 text = { Text(text = muscle) },
@@ -262,41 +300,13 @@ private fun DropDownMenusAddEx() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
-@Composable
-private fun SearchBarAddEx() {
-    var text by remember { mutableStateOf("") }
-    val coroutineScope = rememberCoroutineScope()
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-
-    TextField(
-        value = text,
-        onValueChange = { text = it },
-        label = { Text("Search exercise") },
-        leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
-        modifier = Modifier
-            .fillMaxWidth(),
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = Color.Transparent
-        ),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        keyboardActions = KeyboardActions(onSearch = {
-            coroutineScope.launch {
-                onSearchAddEx(text)
-            }
-            keyboardController?.hide()
-            focusManager.clearFocus()
-        })
-    )
-}
-
 @OptIn(ExperimentalGlideComposeApi::class)
 @Preview
 @Composable
 private fun ExerciseRow(
     @PreviewParameter(ExercisePreviewParameterProvider::class) exercise: ExerciseDecoder
 ) {
+    //Fila que muestra la información de cada ejercicio
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(5.dp)
@@ -315,6 +325,7 @@ private fun ExerciseRow(
                 .width(90.dp)
                 .padding(16.dp)
         )
+        //Se utiliza Column para mostrar el nombre encima del músculo
         Column(
             modifier = Modifier
                 .fillMaxHeight()

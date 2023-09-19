@@ -91,6 +91,7 @@ private fun ProfileView() {
     }
 
     Scaffold(
+        //Barra superior de la pantalla con el título y color correspondientes
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(text = "Profile") },
@@ -102,25 +103,30 @@ private fun ProfileView() {
         },
     ) {
         Box(modifier = Modifier.padding(it).fillMaxSize()) {
-            if(histories.isEmpty()) {
+            if(histories.isEmpty()) { //No hay entrenaminetos registrados
+                //Se muestra un texto en el centro de la pantalla indicándolo
                 Text(
                     text = "No trainings registered yet",
                     modifier = Modifier
                         .align(Alignment.Center)
                 )
-            } else {
+            } else {  //Existen entrenamientos
+                //Se muestra toda la lista de entrenamientos
                 LazyColumn(modifier = Modifier
                     .fillMaxSize()
                     .padding(12.dp)
                 ) {
                     items(histories) { history ->
+                        //Información general de cada uno de ellos
                         Column {
+                            //Nombre de la rutina
                             Text(
                                 text = routines[history.historyId]?.name ?: "",
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.fillMaxWidth()
                             )
+                            //Fecha y timepo que duró el entrenamiento en formato fila
                             Row(modifier = Modifier.fillMaxWidth()) {
                                 Text(
                                     text = dateFormatter.format(Date(history.date)).toString(),
@@ -135,8 +141,10 @@ private fun ProfileView() {
                                         .padding(12.dp)
                                 )
                             }
+                            //Para cada serie del entrenamiento se muestra su información
                             series[history.historyId]?.let { exerciseList ->
                                 exerciseList.forEach { exercise ->
+                                    //Función que sirve para mostrar la información de cada serie
                                     SetProfile(
                                         exercise = exercise,
                                         counter = seriesCounter[history.historyId] ?: mapOf()
@@ -154,6 +162,7 @@ private fun ProfileView() {
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun SetProfile(exercise: Exercise, counter: Map<String, Int>) {
+    //De cada serie se muestra la imagen del ejercicio y el número de repeticiones
     Row(modifier = Modifier.fillMaxWidth()) {
         GlideImage(
             model = exercise.gifUrl,
