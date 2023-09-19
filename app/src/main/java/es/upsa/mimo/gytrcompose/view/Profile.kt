@@ -3,6 +3,7 @@ package es.upsa.mimo.gytrcompose.view
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -163,6 +164,7 @@ private fun SetProfile(exercise: Exercise, counter: Map<String, Int>) {
                 .padding(16.dp)
         )
         Text(
+            modifier = Modifier.fillMaxHeight().align(Alignment.CenterVertically),
             text = counter[exercise.exerciseId].toString() + " series of " + exercise.name
         )
     }

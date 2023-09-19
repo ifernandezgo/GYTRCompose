@@ -10,7 +10,7 @@ import es.upsa.mimo.gytrcompose.model.Exercise
 @Dao
 interface ExerciseDao {
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.NONE)
     fun insertExercise(exercise: Exercise)
 
     @Query("SELECT * FROM exercise WHERE exerciseId = :id")

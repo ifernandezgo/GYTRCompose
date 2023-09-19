@@ -155,7 +155,7 @@ private fun AddExerciseSelectedView() {
                         coroutineScope.launch {
                             if(addExerciseViewModel.getExerciseById(exerciseDb.exerciseId) == null)
                                 addExerciseViewModel.insertExercise(exerciseDb)
-                            if(routine != null)
+                            if(routine != -1)
                                 addExerciseViewModel.addExerciseToRoutine(routine!!, exerciseDb.exerciseId)
                         }
                         onAdd(exerciseId)
