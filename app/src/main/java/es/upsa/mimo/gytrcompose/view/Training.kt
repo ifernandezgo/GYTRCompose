@@ -128,6 +128,8 @@ private fun TrainingView(routineId: Int, settingsViewModel: SettingsViewModel) {
 
     var showSaveDialog by remember { mutableStateOf(false) }
 
+    val restTimerEnabled = settingsViewModel.getTimerEnabled.collectAsState(initial = true)
+
     LaunchedEffect(true) {
         val routineTmp = trainingViewModel.getRoutineById(routineId)
         if(routineTmp != null) {
@@ -157,6 +159,7 @@ private fun TrainingView(routineId: Int, settingsViewModel: SettingsViewModel) {
                 actions = {
                     IconButton(onClick = {
                         timer.cancel()
+                        restTimer?.cancel()
                         showSaveDialog = true
                     }) {
                         Icon(imageVector = Icons.Default.Done, contentDescription = null)
@@ -170,13 +173,15 @@ private fun TrainingView(routineId: Int, settingsViewModel: SettingsViewModel) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 Header(durationText = durationText, setsCompleted)
-                LinearProgressIndicator(
-                    progress = restTimerCount.floatValue/durationRestTimer,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(10.dp),
-                    color = Accent
-                )
+                if(restTimerEnabled.value) {
+                    LinearProgressIndicator(
+                        progress = restTimerCount.floatValue / durationRestTimer,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(10.dp),
+                        color = Accent
+                    )
+                }
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -453,7 +458,6 @@ private fun ExerciseSets(
                     restTimer = object : CountDownTimer((durationRestTimer * 1000).toLong(), 1000) {
                         override fun onTick(millisUntilFinished: Long) {
                             restTimerCount.value += 1
-                            Log.d("REEST", (restTimerCount.value / durationRestTimer).toString())
                         }
 
                         override fun onFinish() {
