@@ -185,16 +185,28 @@ private fun DeleteRoutineDialog(
             title = { Text(text = "Delete routine") },
             text = { Text(text = "Do you really want to delete this routine?") },
             confirmButton = {
-                Button(onClick = {
-                    onDelete()
-                }) {
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Accent,
+                        contentColor = White
+                    ),
+                    onClick = {
+                        onDelete()
+                    }
+                ) {
                     Text(text = "Confirm")
                 }
             },
             dismissButton = {
-                Button(onClick = {
-                    onDismiss()
-                }) {
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Accent,
+                        contentColor = White
+                    ),
+                    onClick = {
+                        onDismiss()
+                    }
+                ) {
                     Text(text = "Cancel")
                 }
             }

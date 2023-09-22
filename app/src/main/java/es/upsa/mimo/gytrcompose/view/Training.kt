@@ -52,6 +52,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -502,16 +503,28 @@ private fun SaveTrainingDialog(
             title = { Text(text = "Save training") },
             text = { Text(text = "Do you really want to save this training?") },
             confirmButton = {
-                Button(onClick = {
-                    onSave()
-                }) {
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Accent,
+                        contentColor = White
+                    ),
+                    onClick = {
+                        onSave()
+                    }
+                ) {
                     Text(text = "Save")
                 }
             },
             dismissButton = {
-                Button(onClick = {
-                    onDismiss()
-                }) {
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Accent,
+                        contentColor = White
+                    ),
+                    onClick = {
+                        onDismiss()
+                    }
+                ) {
                     Text(text = "Cancel")
                 }
             }
